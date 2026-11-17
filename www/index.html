@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#299DB6">
+<title>Betterware | Control de Pedidos</title>
+<style>
+:root{--green:#299DB6;--green2:#217F94;--mint:#E5F4F7;--bg:#F5FAFB;--ink:#1D292C;--muted:#68777B;--line:#DCE8EB;--red:#B42318;--amber:#946200}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{background:var(--green);color:white;padding:17px max(16px,calc((100% - 1100px)/2));display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.radio-player{display:flex;align-items:center;gap:9px;flex-wrap:wrap;background:#ffffff18;border:1px solid #ffffff55;border-radius:12px;padding:7px 10px}.radio-label{font-size:12px;font-weight:750;white-space:nowrap}.radio-player audio{width:210px;height:32px;max-width:55vw}.radio-volume{display:flex;align-items:center;gap:6px;font-size:11px;white-space:nowrap}.radio-volume input{width:78px;padding:0;accent-color:#fff}.brand{font-weight:850;letter-spacing:.4px;font-size:18px}.brand small{display:block;font-size:12px;font-weight:500;opacity:.9;letter-spacing:0}
+main{max-width:1100px;margin:0 auto;padding:18px 14px 40px}
+nav{display:flex;gap:8px;overflow:auto;padding:2px 0 14px}
+button,.btn{border:0;border-radius:10px;padding:10px 14px;font:inherit;font-weight:650;cursor:pointer;background:#e6eee8;color:var(--green2)}
+button.primary{background:var(--green);color:#fff}button.danger{background:#fff0ef;color:var(--red)}button.dark{background:#25352b;color:#fff}button:disabled{opacity:.5;cursor:not-allowed}
+nav button{white-space:nowrap}.nav-active{background:var(--green);color:#fff}
+.panel{background:white;border:1px solid var(--line);border-radius:15px;padding:17px;margin-bottom:15px;box-shadow:0 2px 9px #183d2510}
+h1{font-size:23px;margin:0 0 4px}h2{font-size:18px;margin:0 0 13px}h3{font-size:15px;margin:0 0 10px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 15px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.field{display:flex;flex-direction:column;gap:5px}.field.full{grid-column:1/-1}
+label{font-size:13px;font-weight:700;color:#425047}
+input,select,textarea{width:100%;border:1px solid #cbd8cf;border-radius:9px;padding:11px 10px;font:inherit;background:#fff;color:var(--ink);min-width:0}
+input:focus,select:focus,textarea:focus{outline:2px solid #A7D8E2;border-color:var(--green)}
+.row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.between{justify-content:space-between}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:660px}th,td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;vertical-align:middle}th{color:var(--muted);font-size:12px}
+td input{padding:8px;min-width:72px}.product-table{min-width:800px}
+.total{text-align:right;font-size:18px;font-weight:850;color:var(--green2);padding-top:13px}
+.card-list{display:grid;gap:10px}.item{border:1px solid var(--line);border-radius:12px;padding:13px;background:#fff}
+.item-title{font-weight:800}.muted{color:var(--muted);font-size:13px}.pill{display:inline-block;padding:3px 8px;border-radius:30px;background:var(--mint);color:var(--green2);font-size:11px;font-weight:800}
+.pill.pending{background:#fff5d9;color:var(--amber)}.pill.uploaded{background:#e8f2ff;color:#245b96}
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}.stat{background:var(--mint);border-radius:12px;padding:13px}.stat b{font-size:21px;display:block;color:var(--green2)}.stat span{font-size:12px;color:var(--muted)}
+.hidden{display:none!important}.empty{text-align:center;color:var(--muted);padding:25px 12px}
+.notice{padding:11px 13px;border-radius:10px;background:#f1f6f2;color:#425047;font-size:13px;margin:10px 0}
+.smallbtn{padding:7px 9px;font-size:12px}.money{white-space:nowrap;font-weight:750}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}.app-footer{line-height:1.7;border-top:1px solid var(--line);margin-top:18px}.creator-brand{font-size:14px;font-weight:850;letter-spacing:.4px;color:var(--ink);margin-top:9px}.creator-contact{display:inline-block;margin-top:9px;padding:8px 12px;border-radius:9px;background:#168653;color:#fff;text-decoration:none;font-weight:750}.creator-copyright{font-size:10px;margin-top:7px}
+@media(max-width:620px){header{align-items:flex-start}.radio-player{width:100%;justify-content:space-between}.radio-player audio{width:min(100%,220px);max-width:62vw}.radio-volume input{width:64px}main{padding:13px 10px 30px}.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.statgrid{grid-template-columns:repeat(3,1fr)}.stat{padding:10px}.stat b{font-size:18px}.panel{padding:14px}h1{font-size:21px}}
+</style>
+</head>
+<body>
+<header><div class="brand">BETTERWARE <small>CONTROL DE PEDIDOS</small></div><div class="row"><div class="radio-player"><span class="radio-label">♫ Viejitas Pero Bonitas · En vivo</span><audio id="radioAudio" controls preload="none" aria-label="Reproductor de Viejitas Pero Bonitas Radio"><source src="https://stream-46.zeno.fm/k8yuexp35k0uv" type="audio/mpeg">Tu navegador no puede reproducir este audio.</audio><label class="radio-volume" for="radioVolume">Volumen <input id="radioVolume" type="range" min="0" max="1" step="0.01" value="0.7" aria-label="Volumen independiente de la radio"></label></div><div id="headerDate" style="font-size:12px;opacity:.9"></div></div></header>
+<main>
+<nav>
+<button class="nav-active" data-view="pedido">＋ Nuevo pedido</button>
+<button data-view="clientes">Clientes</button>
+<button data-view="pedidos">Pedidos guardados</button>
+<button data-view="cierre">Finalizar / revisar</button>
+<button data-view="respaldo">Respaldo</button>
+</nav>
+
+<section id="view-pedido">
+<div class="panel">
+<h1 id="orderHeading">Nuevo pedido</h1><p class="sub">Selecciona al cliente y agrega los productos solicitados.</p>
+<div class="grid">
+<div class="field full"><label for="clientSelect">Seleccionar cliente registrado</label><select id="clientSelect"><option value="">Selecciona un cliente…</option></select><label style="display:flex;align-items:center;gap:8px;font-weight:600;margin-top:5px"><input id="manualClientMode" type="checkbox" style="width:auto"> Capturar cliente manualmente</label></div>
+<div id="manualClientFields" class="grid full hidden"><div class="field"><label for="manualName">Nombre del cliente *</label><input id="manualName" maxlength="100"></div><div class="field"><label for="manualPhone">Teléfono</label><input id="manualPhone" type="tel" maxlength="25"></div><div class="field full"><label for="manualAddress">Dirección</label><input id="manualAddress" maxlength="220"></div><div class="field"><label for="manualType">Tipo de cliente</label><select id="manualType"><option>Cliente final</option><option>Asociado</option></select></div><div class="field hidden" id="manualAssociateField"><label for="manualAssociate">Número de asociado *</label><input id="manualAssociate" maxlength="40"></div><label class="field full" style="display:flex;align-items:center;gap:8px;font-weight:600"><input id="saveManualClient" type="checkbox" checked style="width:auto"> Guardar este cliente en el directorio para futuros pedidos</label></div>
+<div class="field"><label for="orderDate">Fecha</label><input id="orderDate" type="date"></div>
+<div class="field"><label for="orderWeek">Semana</label><input id="orderWeek" type="text" placeholder="Ej. 47"></div>
+</div>
+<div id="selectedClientInfo" class="notice hidden"></div>
+</div>
+<div class="panel">
+<div class="row between"><h2>Productos del pedido</h2><button type="button" id="addProduct" class="primary">＋ Agregar producto</button></div>
+<div class="table-wrap">
+<table class="product-table">
+<thead><tr><th>Código</th><th>Nombre del producto</th><th>Cantidad</th><th>Precio ($)</th><th>Total ($)</th><th></th></tr></thead>
+<tbody id="productRows"></tbody>
+</table>
+</div>
+<div class="total">Total del pedido: <span id="orderTotal">$0.00</span></div>
+<div class="actions"><button class="primary" id="saveOrder">Guardar pedido</button><button id="clearOrder">Limpiar captura</button><button class="danger hidden" id="cancelEdit">Cancelar edición</button></div>
+</div>
+</section>
+
+<section id="view-clientes" class="hidden">
+<div class="panel">
+<h1>Directorio de clientes</h1><p class="sub">Guarda cada cliente una sola vez para seleccionarlo en futuros pedidos.</p>
+<form id="clientForm">
+<input type="hidden" id="clientId">
+<div class="grid">
+<div class="field"><label for="clientName">Nombre del cliente *</label><input id="clientName" required maxlength="100"></div>
+<div class="field"><label for="clientPhone">Teléfono</label><input id="clientPhone" type="tel" maxlength="25"></div>
+<div class="field full"><label for="clientAddress">Dirección</label><input id="clientAddress" maxlength="220"></div>
+<div class="field"><label for="clientType">Tipo de cliente *</label><select id="clientType"><option value="Cliente final">Cliente final</option><option value="Asociado">Asociado</option></select></div>
+<div class="field hidden" id="associateField"><label for="associateNumber">Número de asociado *</label><input id="associateNumber" maxlength="40"></div>
+</div>
+<div class="actions"><button class="primary" type="submit" id="saveClient">Guardar cliente</button><button type="button" id="cancelClientEdit" class="hidden">Cancelar</button></div>
+</form>
+</div>
+<div class="panel"><div class="row between"><h2>Buscar clientes</h2><span class="pill" id="clientCount">0 clientes</span></div><div class="field"><label for="clientSearch">Buscar por nombre o número de asociado</label><input id="clientSearch" type="search" placeholder="Escribe un nombre o número de asociado…"></div><div id="clientList" class="card-list" style="margin-top:12px"></div></div>
+</section>
+
+<section id="view-pedidos" class="hidden">
+<div class="panel">
+<div class="row between"><div><h1>Pedidos guardados</h1><p class="sub">Consulta, modifica o elimina los pedidos de este dispositivo.</p></div><select id="orderFilter" style="max-width:180px"><option value="todos">Todos</option><option value="pendiente">Pendientes</option><option value="subido">Subidos a Plus</option></select></div>
+<div class="statgrid"><div class="stat"><b id="statOrders">0</b><span>Pedidos</span></div><div class="stat"><b id="statPending">0</b><span>Pendientes</span></div><div class="stat"><b id="statSum">$0</b><span>Total guardado</span></div></div>
+<div id="orderList" class="card-list"></div>
+</div>
+</section>
+
+<section id="view-cierre" class="hidden">
+<div class="panel">
+<h1>Finalizar levantamiento</h1><p class="sub">Revisa los pedidos capturados antes de pasarlos manualmente a Betterware Plus.</p>
+<div class="grid"><div class="field"><label for="closeWeek">Filtrar por semana</label><input id="closeWeek" placeholder="Ej. 47"></div><div class="field"><label for="closeStatus">Estado</label><select id="closeStatus"><option value="pendiente">Pendientes de subir</option><option value="todos">Todos los pedidos</option><option value="subido">Ya subidos</option></select></div></div>
+<div id="closeSummary" class="notice"></div>
+<div id="closeList" class="card-list"></div>
+<div class="actions"><button class="primary" id="markWeekDone">Marcar pedidos visibles como subidos a Plus</button></div>
+<p class="muted">Esta acción solo cambia el estado. Después puedes eliminar los pedidos marcados como subidos para liberar espacio. Los clientes no se eliminan.</p>
+</div>
+</section>
+
+<section id="view-respaldo" class="hidden">
+<div class="panel">
+<h1>Respaldo de información</h1><p class="sub">Los datos se guardan únicamente en este navegador y dispositivo.</p>
+<div class="notice"><b>Importante:</b> si borras los datos del navegador, cambias de dispositivo o usas modo incógnito, podrías perder tus registros. Exporta un respaldo periódicamente.</div>
+<div class="actions"><button class="primary" id="exportData">Exportar respaldo (.json)</button><button id="importButton">Importar respaldo</button><input type="file" id="importFile" accept=".json,application/json" class="hidden"></div>
+<div class="actions"><button class="danger" id="deleteUploaded">Eliminar todos los pedidos marcados como subidos</button></div>
+<p class="muted" id="storageInfo"></p>
+</div>
+</section>
+<footer class="app-footer"><div>Betterware Control de Pedidos · Datos locales en este dispositivo</div><div class="creator-brand">OG Digital Solutions</div><div>Creado por <strong>Óscar Granados</strong></div><a class="creator-contact" href="https://wa.me/528110284919?text=Hola%2C%20%C3%93scar.%20Quiero%20contactarte%20por%20la%20aplicaci%C3%B3n%20Betterware%20Control%20de%20Pedidos." target="_blank" rel="noopener noreferrer">✆ Contactar al creador por WhatsApp</a><div class="creator-copyright">© 2026 · Todos los derechos reservados</div></footer>
+</main>
+<script>
+(() => {
+'use strict';
+const KEY='betterware_control_pedidos_v1';
+const radioAudio=document.getElementById('radioAudio');const radioVolume=document.getElementById('radioVolume');if(radioAudio&&radioVolume){radioAudio.volume=Number(radioVolume.value);radioVolume.addEventListener('input',()=>{radioAudio.volume=Number(radioVolume.value)})}
+let db={clients:[],orders:[]},editingOrder=null;
+const $=id=>document.getElementById(id);
+const money=n=>new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN'}).format(Number(n)||0);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+function saveDB(){try{localStorage.setItem(KEY,JSON.stringify(db));updateStorageInfo();return true}catch(e){alert('No se pudo guardar. El almacenamiento del navegador podría estar lleno. Exporta un respaldo y libera espacio.');return false}}
+function migrateData(d){if(!d||!Array.isArray(d.clients)||!Array.isArray(d.orders))throw Error('Formato');d.orders.forEach(o=>(o.products||[]).forEach(p=>{if(p.pieces!==undefined){p.qty=(Number(p.pieces)||0)*(Number(p.qty)||0);delete p.pieces;p.total=(Number(p.qty)||0)*(Number(p.price)||0)}}));return {clients:d.clients,orders:d.orders}}
+function loadDB(){try{const raw=localStorage.getItem(KEY);if(raw){const parsed=JSON.parse(raw);db=migrateData(parsed);localStorage.setItem(KEY,JSON.stringify(db))}}catch(e){alert('No se pudieron leer o actualizar los datos guardados. Exporta un respaldo anterior si lo tienes.')} }
+function showView(name){document.querySelectorAll('main section[id^="view-"]').forEach(s=>s.classList.toggle('hidden',s.id!=='view-'+name));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('nav-active',b.dataset.view===name));if(name==='clientes')renderClients();if(name==='pedidos')renderOrders();if(name==='cierre')renderClose();if(name==='pedido')refreshClientSelect()}
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
+function isoToday(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function weekOf(dateStr){if(!dateStr)return '';const d=new Date(dateStr+'T12:00:00');const jan1=new Date(d.getFullYear(),0,1);return String(Math.ceil((((d-jan1)/86400000)+jan1.getDay()+1)/7))}
+function setDefaultDate(){ $('orderDate').value=isoToday();$('orderWeek').value=weekOf(isoToday())}
+$('headerDate').textContent=new Date().toLocaleDateString('es-MX',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+$('orderDate').addEventListener('change',()=>{$('orderWeek').value=weekOf($('orderDate').value)});
+function refreshClientSelect(selected=''){
+const sel=$('clientSelect');sel.innerHTML='<option value="">Selecciona un cliente…</option>'+db.clients.slice().sort((a,b)=>a.name.localeCompare(b.name,'es')).map(c=>`<option value="${esc(c.id)}">${esc(c.name)} — ${esc(c.type)}${c.type==='Asociado'?' · '+esc(c.associate||''):''}</option>`).join('');
+sel.value=selected;showClientInfo();
+}
+function showClientInfo(){const c=db.clients.find(x=>x.id===$('clientSelect').value),el=$('selectedClientInfo');if(!c){el.classList.add('hidden');el.textContent='';return}el.classList.remove('hidden');el.textContent=[c.phone,c.address,c.type==='Asociado'?'Asociado #'+(c.associate||''):c.type].filter(Boolean).join(' · ')}
+$('clientSelect').addEventListener('change',showClientInfo);
+$('manualClientMode').addEventListener('change',()=>{const manual=$('manualClientMode').checked;$('clientSelect').disabled=manual;$('manualClientFields').classList.toggle('hidden',!manual);if(manual){$('selectedClientInfo').classList.add('hidden')}else{showClientInfo()}});
+$('manualType').addEventListener('change',()=>{$('manualAssociateField').classList.toggle('hidden',$('manualType').value!=='Asociado');$('manualAssociate').required=$('manualType').value==='Asociado'});
+function addProductRow(p={}){const tr=document.createElement('tr');tr.innerHTML=`<td><input aria-label="Código" class="p-code" value="${esc(p.code||'')}" placeholder="Código"></td><td><input aria-label="Nombre del producto" class="p-name" value="${esc(p.name||'')}" placeholder="Producto"></td><td><input aria-label="Cantidad" class="p-qty" type="number" min="1" step="1" value="${p.qty??1}"></td><td><input aria-label="Precio" class="p-price" type="number" min="0" step="0.01" value="${p.price??''}" placeholder="0.00"></td><td class="p-total money">${money((Number(p.qty??1)||0)*(Number(p.price)||0))}</td><td><button type="button" class="danger smallbtn remove-row" title="Quitar producto">×</button></td>`;
+tr.querySelectorAll('input').forEach(i=>i.addEventListener('input',()=>calcRow(tr)));tr.querySelector('.remove-row').addEventListener('click',()=>{tr.remove();calcOrder()});$('productRows').appendChild(tr);calcOrder()}
+function calcRow(tr){const qty=Number(tr.querySelector('.p-qty').value)||0,price=Number(tr.querySelector('.p-price').value)||0;tr.querySelector('.p-total').textContent=money(qty*price);calcOrder()}
+function getProducts(){return [...$('productRows').querySelectorAll('tr')].map(tr=>({code:tr.querySelector('.p-code').value.trim(),name:tr.querySelector('.p-name').value.trim(),qty:Number(tr.querySelector('.p-qty').value)||0,price:Number(tr.querySelector('.p-price').value)||0,total:(Number(tr.querySelector('.p-qty').value)||0)*(Number(tr.querySelector('.p-price').value)||0)})).filter(p=>p.code||p.name||p.price)}
+function calcOrder(){const total=getProducts().reduce((s,p)=>s+p.total,0);$('orderTotal').textContent=money(total);return total}
+$('addProduct').addEventListener('click',()=>addProductRow());
+function clearOrder(){editingOrder=null;$('orderHeading').textContent='Nuevo pedido';$('saveOrder').textContent='Guardar pedido';$('cancelEdit').classList.add('hidden');$('clientSelect').value='';$('manualClientMode').checked=false;$('clientSelect').disabled=false;$('manualClientFields').classList.add('hidden');$('manualName').value='';$('manualPhone').value='';$('manualAddress').value='';$('manualType').value='Cliente final';$('manualAssociate').value='';$('saveManualClient').checked=true;$('manualAssociateField').classList.add('hidden');$('selectedClientInfo').classList.add('hidden');$('productRows').innerHTML='';setDefaultDate();addProductRow()}
+$('clearOrder').addEventListener('click',()=>{if(confirm('¿Limpiar la captura actual?'))clearOrder()});
+$('cancelEdit').addEventListener('click',clearOrder);
+$('saveOrder').addEventListener('click',()=>{
+let client=db.clients.find(c=>c.id===$('clientSelect').value),products=getProducts(),manual=$('manualClientMode').checked;
+if(manual){
+ const name=$('manualName').value.trim(),type=$('manualType').value,associate=$('manualAssociate').value.trim();
+ if(!name){alert('Escribe el nombre del cliente.');return}
+ if(type==='Asociado'&&!associate){alert('Captura el número de asociado.');return}
+ client={id:null,name,phone:$('manualPhone').value.trim(),address:$('manualAddress').value.trim(),type,associate:type==='Asociado'?associate:''};
+ if($('saveManualClient').checked){
+  const existing=db.clients.find(c=>c.name.toLocaleLowerCase()===name.toLocaleLowerCase() && (c.associate||'')===(client.associate||''));
+  if(existing){client.id=existing.id;Object.assign(existing,client)}
+  else{client.id=uid();db.clients.push(client)}
+ }
+}else if(!client){alert('Selecciona un cliente o activa la captura manual.');return}
+if(!products.length){alert('Agrega al menos un producto.');return}
+if(products.some(p=>!p.name||p.qty<=0)){alert('Revisa los productos: nombre, piezas y cantidad deben estar completos y ser mayores que cero.');return}
+const date=$('orderDate').value;if(!date){alert('Selecciona la fecha del pedido.');return}
+const order={id:editingOrder||uid(),clientId:client.id||null,clientName:client.name,clientPhone:client.phone||'',clientAddress:client.address||'',clientType:client.type||'Cliente final',associate:client.associate||'',date,week:$('orderWeek').value.trim()||weekOf(date),products,total:products.reduce((s,p)=>s+p.total,0),status:editingOrder?(db.orders.find(o=>o.id===editingOrder)?.status||'pendiente'):'pendiente',updatedAt:new Date().toISOString()};
+if(editingOrder){const i=db.orders.findIndex(o=>o.id===editingOrder);if(i>=0)db.orders[i]=order}else{order.createdAt=order.updatedAt;db.orders.unshift(order)}
+if(saveDB()){alert(editingOrder?'Pedido actualizado.':'Pedido guardado.');clearOrder();renderOrders()}
+});
+function renderClients(){
+$('clientCount').textContent=db.clients.length+' clientes';const term=($('clientSearch').value||'').trim().toLocaleLowerCase();const box=$('clientList');
+const matches=db.clients.filter(c=>!term||c.name.toLocaleLowerCase().includes(term)||(c.associate||'').toLocaleLowerCase().includes(term)||String(c.phone||'').toLocaleLowerCase().includes(term));
+if(!matches.length){box.innerHTML='<div class="empty">'+(db.clients.length?'No se encontraron clientes con esa búsqueda.':'Aún no hay clientes registrados.')+'</div>';return}
+box.innerHTML=matches.slice().sort((a,b)=>a.name.localeCompare(b.name,'es')).map(c=>`<div class="item"><div class="row between"><div class="item-title">${esc(c.name)} <span class="pill">${esc(c.type)}</span></div><div class="row"><button class="smallbtn edit-client" data-id="${esc(c.id)}">Editar</button><button class="danger smallbtn del-client" data-id="${esc(c.id)}">Eliminar</button></div></div><div class="muted">${esc(c.phone||'Sin teléfono')} · ${esc(c.address||'Sin dirección')}${c.type==='Asociado'?' · Asociado #'+esc(c.associate||''):''}</div></div>`).join('');
+box.querySelectorAll('.edit-client').forEach(b=>b.onclick=()=>editClient(b.dataset.id));box.querySelectorAll('.del-client').forEach(b=>b.onclick=()=>deleteClient(b.dataset.id))}
+$('clientSearch').addEventListener('input',renderClients);
+function editClient(id){const c=db.clients.find(x=>x.id===id);if(!c)return;$('clientId').value=c.id;$('clientName').value=c.name;$('clientPhone').value=c.phone||'';$('clientAddress').value=c.address||'';$('clientType').value=c.type;$('associateNumber').value=c.associate||'';toggleAssociate();$('saveClient').textContent='Actualizar cliente';$('cancelClientEdit').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'})}
+function resetClientForm(){$('clientForm').reset();$('clientId').value='';$('saveClient').textContent='Guardar cliente';$('cancelClientEdit').classList.add('hidden');toggleAssociate()}
+function deleteClient(id){if(db.orders.some(o=>o.clientId===id)){alert('Este cliente tiene pedidos asociados. Conserva el registro para mantener el historial.');return}if(confirm('¿Eliminar este cliente?')){db.clients=db.clients.filter(c=>c.id!==id);saveDB();renderClients();refreshClientSelect()}}
+$('clientType').addEventListener('change',toggleAssociate);function toggleAssociate(){const yes=$('clientType').value==='Asociado';$('associateField').classList.toggle('hidden',!yes);$('associateNumber').required=yes}
+$('clientForm').addEventListener('submit',e=>{e.preventDefault();const type=$('clientType').value,associate=$('associateNumber').value.trim();if(type==='Asociado'&&!associate){alert('Captura el número de asociado.');return}const id=$('clientId').value;const c={id:id||uid(),name:$('clientName').value.trim(),phone:$('clientPhone').value.trim(),address:$('clientAddress').value.trim(),type,associate:type==='Asociado'?associate:''};if(!c.name)return;if(id){const i=db.clients.findIndex(x=>x.id===id);if(i>=0)db.clients[i]=c}else db.clients.push(c);if(saveDB()){resetClientForm();renderClients();refreshClientSelect();alert('Cliente guardado.')}});
+$('cancelClientEdit').onclick=resetClientForm;
+function renderOrders(){const filter=$('orderFilter').value;let list=db.orders.filter(o=>filter==='todos'||(filter==='pendiente'?o.status!=='subido':o.status==='subido'));$('statOrders').textContent=db.orders.length;$('statPending').textContent=db.orders.filter(o=>o.status!=='subido').length;$('statSum').textContent=money(db.orders.reduce((s,o)=>s+o.total,0));const box=$('orderList');if(!list.length){box.innerHTML='<div class="empty">No hay pedidos para mostrar.</div>';return}box.innerHTML=list.map(orderCard).join('');wireOrderCards(box)}
+$('orderFilter').onchange=renderOrders;
+function orderCard(o){const c=db.clients.find(x=>x.id===o.clientId);return `<div class="item"><div class="row between"><div><div class="item-title">${esc(o.clientName||c?.name||'Cliente')} <span class="pill ${o.status==='subido'?'uploaded':'pending'}">${o.status==='subido'?'Subido a Plus':'Pendiente'}</span></div><div class="muted">${esc(o.date)} · Semana ${esc(o.week||'—')} · ${o.products.length} producto(s)</div></div><div class="money">${money(o.total)}</div></div><div class="actions"><button class="smallbtn detail-order" data-id="${esc(o.id)}">Ver detalle</button><button class="smallbtn edit-order" data-id="${esc(o.id)}">Editar</button><button class="smallbtn ${o.status==='subido'?'':'primary'} toggle-upload" data-id="${esc(o.id)}">${o.status==='subido'?'Marcar pendiente':'Marcar subido'}</button><button class="danger smallbtn delete-order" data-id="${esc(o.id)}">Eliminar</button></div><div class="detail muted hidden" id="detail-${esc(o.id)}">${o.products.map(p=>`${esc(p.code)} · ${esc(p.name)} — ${p.qty} × ${money(p.price)} = <b>${money(p.total)}</b>`).join('<br>')}</div></div>`}
+function wireOrderCards(box){box.querySelectorAll('.detail-order').forEach(b=>b.onclick=()=>{$('detail-'+b.dataset.id).classList.toggle('hidden')});box.querySelectorAll('.edit-order').forEach(b=>b.onclick=()=>editOrder(b.dataset.id));box.querySelectorAll('.delete-order').forEach(b=>b.onclick=()=>deleteOrder(b.dataset.id));box.querySelectorAll('.toggle-upload').forEach(b=>b.onclick=()=>{const o=db.orders.find(x=>x.id===b.dataset.id);if(!o)return;o.status=o.status==='subido'?'pendiente':'subido';saveDB();renderOrders();renderClose()})}
+function editOrder(id){const o=db.orders.find(x=>x.id===id);if(!o)return;editingOrder=id;$('orderHeading').textContent='Editar pedido';$('saveOrder').textContent='Guardar cambios';$('cancelEdit').classList.remove('hidden');refreshClientSelect(o.clientId||'');if(!o.clientId){$('manualClientMode').checked=true;$('clientSelect').disabled=true;$('manualClientFields').classList.remove('hidden');$('manualName').value=o.clientName||'';$('manualPhone').value=o.clientPhone||'';$('manualAddress').value=o.clientAddress||'';$('manualType').value=o.clientType||'Cliente final';$('manualAssociate').value=o.associate||'';$('manualAssociateField').classList.toggle('hidden',$('manualType').value!=='Asociado');$('saveManualClient').checked=false}else{$('manualClientMode').checked=false;$('clientSelect').disabled=false;$('manualClientFields').classList.add('hidden')} $('orderDate').value=o.date;$('orderWeek').value=o.week;$('productRows').innerHTML='';o.products.forEach(addProductRow);calcOrder();showView('pedido');window.scrollTo({top:0,behavior:'smooth'})}
+function deleteOrder(id){if(confirm('¿Eliminar este pedido definitivamente del dispositivo?')){db.orders=db.orders.filter(o=>o.id!==id);saveDB();renderOrders();renderClose()}}
+function renderClose(){const week=$('closeWeek').value.trim(),status=$('closeStatus').value;const list=db.orders.filter(o=>(!week||String(o.week)===week)&&(status==='todos'||(status==='pendiente'?o.status!=='subido':o.status==='subido')));$('closeSummary').textContent=`${list.length} pedido(s) · Total ${money(list.reduce((s,o)=>s+o.total,0))}`;const box=$('closeList');box.innerHTML=list.length?list.map(orderCard).join(''):'<div class="empty">No hay pedidos con esos filtros.</div>';wireOrderCards(box)}
+$('closeWeek').oninput=renderClose;$('closeStatus').onchange=renderClose;
+$('markWeekDone').onclick=()=>{const week=$('closeWeek').value.trim(),status=$('closeStatus').value;const list=db.orders.filter(o=>(!week||String(o.week)===week)&&(status==='todos'||(status==='pendiente'?o.status!=='subido':o.status==='subido')));if(!list.length){alert('No hay pedidos visibles.');return}if(confirm(`¿Marcar ${list.length} pedido(s) como subidos a Betterware Plus?`)){list.forEach(o=>o.status='subido');saveDB();renderClose();renderOrders();alert('Pedidos marcados como subidos.')}} 
+$('deleteUploaded').onclick=()=>{const n=db.orders.filter(o=>o.status==='subido').length;if(!n){alert('No hay pedidos marcados como subidos.');return}if(confirm(`Se eliminarán ${n} pedido(s) subidos. Los clientes se conservarán. ¿Continuar?`)){db.orders=db.orders.filter(o=>o.status!=='subido');saveDB();renderOrders();renderClose();alert('Pedidos subidos eliminados del dispositivo.')}};
+$('exportData').onclick=()=>{const blob=new Blob([JSON.stringify({app:'Betterware Control de Pedidos',version:1,exportedAt:new Date().toISOString(),data:db},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='respaldo-betterware-'+isoToday()+'.json';a.click();URL.revokeObjectURL(a.href)};
+$('importButton').onclick=()=>$('importFile').click();
+$('importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const x=JSON.parse(await f.text()),d=x.data||x;if(!Array.isArray(d.clients)||!Array.isArray(d.orders))throw Error('Formato');if(!confirm('La restauración reemplazará los clientes y pedidos actuales. ¿Continuar?'))return;db=migrateData(d);if(saveDB()){alert('Respaldo restaurado.');refreshClientSelect();renderClients();renderOrders();renderClose()}}catch(err){alert('El archivo no parece ser un respaldo válido de Betterware.')}e.target.value=''};
+function updateStorageInfo(){try{const bytes=new Blob([localStorage.getItem(KEY)||'']).size;$('storageInfo').textContent=`Espacio aproximado utilizado por esta aplicación: ${(bytes/1024).toFixed(1)} KB.`}catch(e){}}
+loadDB();setDefaultDate();refreshClientSelect();addProductRow();renderClients();renderOrders();renderClose();updateStorageInfo();
+})();
+</script>
+</body>
+</html>
