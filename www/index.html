@@ -37,6 +37,31 @@ td input{padding:8px;min-width:72px}.product-table{min-width:800px}
 .smallbtn{padding:7px 9px;font-size:12px}.money{white-space:nowrap;font-weight:750}
 footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}.app-footer{line-height:1.7;border-top:1px solid var(--line);margin-top:18px}.creator-brand{font-size:14px;font-weight:850;letter-spacing:.4px;color:var(--ink);margin-top:9px}.creator-contact{display:inline-block;margin-top:9px;padding:8px 12px;border-radius:9px;background:#168653;color:#fff;text-decoration:none;font-weight:750}.creator-copyright{font-size:10px;margin-top:7px}
 @media(max-width:620px){header{align-items:flex-start}.radio-player{width:100%;justify-content:space-between}.radio-player audio{width:min(100%,220px);max-width:62vw}.radio-volume input{width:64px}main{padding:13px 10px 30px}.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.statgrid{grid-template-columns:repeat(3,1fr)}.stat{padding:10px}.stat b{font-size:18px}.panel{padding:14px}h1{font-size:21px}}
+
+/* Apariencia: tema claro, oscuro y automático */
+html[data-theme="dark"]{color-scheme:dark}
+html[data-theme="dark"] body{background:#111719;color:#e7eeee}
+html[data-theme="dark"] header{background:#173b43;color:#f5ffff}
+html[data-theme="dark"] .panel,html[data-theme="dark"] .item{background:#1b2528;border-color:#344448;box-shadow:none}
+html[data-theme="dark"] nav button{background:#263438;color:#dce8e9}
+html[data-theme="dark"] nav button.nav-active{background:#299DB6;color:#fff}
+html[data-theme="dark"] button{background:#2b3a3e;color:#e7eeee}
+html[data-theme="dark"] button.primary{background:#217F94;color:#fff}
+html[data-theme="dark"] button.danger{background:#492b2b;color:#ffb8b1}
+html[data-theme="dark"] button.dark{background:#0c171a;color:#fff}
+html[data-theme="dark"] input,html[data-theme="dark"] select,html[data-theme="dark"] textarea{background:#11191c;color:#e7eeee;border-color:#46575b}
+html[data-theme="dark"] label{color:#c5d3d5}
+html[data-theme="dark"] th,html[data-theme="dark"] td{border-color:#344448}
+html[data-theme="dark"] th,html[data-theme="dark"] .muted,html[data-theme="dark"] .sub,html[data-theme="dark"] .empty{color:#aababc}
+html[data-theme="dark"] .stat,html[data-theme="dark"] .notice{background:#24383d;color:#dce9ea}
+html[data-theme="dark"] .stat b,html[data-theme="dark"] .total{color:#70c9d8}
+html[data-theme="dark"] .pill{background:#24454b;color:#9ce0eb}
+html[data-theme="dark"] .pill.pending{background:#493d24;color:#f3d28b}
+html[data-theme="dark"] .pill.uploaded{background:#263e55;color:#a9d1ff}
+html[data-theme="dark"] .app-footer{border-color:#344448}
+html[data-theme="dark"] .creator-brand{color:#e7eeee}
+html[data-theme="dark"] .radio-player{background:#ffffff12}
+@media(prefers-color-scheme:dark){html[data-theme="system"]{color-scheme:dark}html[data-theme="system"] body{background:#111719;color:#e7eeee}html[data-theme="system"] header{background:#173b43;color:#f5ffff}html[data-theme="system"] .panel,html[data-theme="system"] .item{background:#1b2528;border-color:#344448;box-shadow:none}html[data-theme="system"] nav button{background:#263438;color:#dce8e9}html[data-theme="system"] nav button.nav-active{background:#299DB6;color:#fff}html[data-theme="system"] button{background:#2b3a3e;color:#e7eeee}html[data-theme="system"] button.primary{background:#217F94;color:#fff}html[data-theme="system"] button.danger{background:#492b2b;color:#ffb8b1}html[data-theme="system"] input,html[data-theme="system"] select,html[data-theme="system"] textarea{background:#11191c;color:#e7eeee;border-color:#46575b}html[data-theme="system"] label{color:#c5d3d5}html[data-theme="system"] th,html[data-theme="system"] td{border-color:#344448}html[data-theme="system"] th,html[data-theme="system"] .muted,html[data-theme="system"] .sub,html[data-theme="system"] .empty{color:#aababc}html[data-theme="system"] .stat,html[data-theme="system"] .notice{background:#24383d;color:#dce9ea}html[data-theme="system"] .stat b,html[data-theme="system"] .total{color:#70c9d8}html[data-theme="system"] .pill{background:#24454b;color:#9ce0eb}html[data-theme="system"] .pill.pending{background:#493d24;color:#f3d28b}html[data-theme="system"] .pill.uploaded{background:#263e55;color:#a9d1ff}html[data-theme="system"] .app-footer{border-color:#344448}html[data-theme="system"] .creator-brand{color:#e7eeee}}
 </style>
 </head>
 <body>
@@ -48,6 +73,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}.app-foo
 <button data-view="pedidos">Pedidos guardados</button>
 <button data-view="cierre">Finalizar / revisar</button>
 <button data-view="respaldo">Respaldo</button>
+<button data-view="apariencia">Apariencia</button>
 </nav>
 
 <section id="view-pedido">
@@ -120,6 +146,14 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}.app-foo
 <p class="muted" id="storageInfo"></p>
 </div>
 </section>
+
+<section id="view-apariencia" class="hidden">
+<div class="panel">
+<h1>Apariencia</h1><p class="sub">Personaliza cómo se ve Betterware Control de Pedidos en este dispositivo.</p>
+<div class="field"><label for="themeSelect">Tema de la aplicación</label><select id="themeSelect"><option value="light">☀️ Modo claro</option><option value="dark">🌙 Modo oscuro</option><option value="system">⚙️ Automático (según el dispositivo)</option></select></div>
+<div class="notice" id="themeDescription">Elige el tema que te resulte más cómodo. Tu preferencia se guardará en este dispositivo.</div>
+</div>
+</section>
 <footer class="app-footer"><div>Betterware Control de Pedidos · Datos locales en este dispositivo</div><div class="creator-brand">OG Digital Solutions</div><div>Creado por <strong>Óscar Granados</strong></div><a class="creator-contact" href="https://wa.me/528110284919?text=Hola%2C%20%C3%93scar.%20Quiero%20contactarte%20por%20la%20aplicaci%C3%B3n%20Betterware%20Control%20de%20Pedidos." target="_blank" rel="noopener noreferrer">✆ Contactar al creador por WhatsApp</a><div class="creator-copyright">© 2026 · Todos los derechos reservados</div></footer>
 </main>
 <script>
@@ -129,6 +163,11 @@ const KEY='betterware_control_pedidos_v1';
 const radioAudio=document.getElementById('radioAudio');const radioVolume=document.getElementById('radioVolume');if(radioAudio&&radioVolume){radioAudio.volume=Number(radioVolume.value);radioVolume.addEventListener('input',()=>{radioAudio.volume=Number(radioVolume.value)})}
 let db={clients:[],orders:[]},editingOrder=null;
 const $=id=>document.getElementById(id);
+const THEME_KEY='betterware_control_pedidos_theme';
+const themeSelect=document.getElementById('themeSelect');
+function applyTheme(theme){const selected=['light','dark','system'].includes(theme)?theme:'light';document.documentElement.dataset.theme=selected;try{localStorage.setItem(THEME_KEY,selected)}catch(e){}if(themeSelect)themeSelect.value=selected;const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.setAttribute('content',selected==='dark'?'#173b43':'#299DB6');const description=document.getElementById('themeDescription');if(description)description.textContent=selected==='dark'?'Modo oscuro activado. La apariencia se mantendrá aunque cierres la aplicación.':selected==='system'?'La aplicación seguirá automáticamente el tema configurado en tu dispositivo.':'Modo claro activado. La apariencia se mantendrá aunque cierres la aplicación.'}
+let savedTheme='light';try{savedTheme=localStorage.getItem(THEME_KEY)||'light'}catch(e){}applyTheme(savedTheme);if(themeSelect)themeSelect.addEventListener('change',()=>applyTheme(themeSelect.value));
+
 const money=n=>new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN'}).format(Number(n)||0);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
