@@ -86,6 +86,7 @@ html[data-theme="dark"] .creator-brand{color:#e7eeee}
 <button data-view="pedidos"><span>›</span>Pedidos guardados</button>
 <button data-view="cierre"><span>›</span>Finalizar / revisar</button>
 <button data-view="respaldo"><span>›</span>Respaldo</button>
+<button data-view="perfil"><span>›</span>Perfiles y configuración</button>
 <button data-view="apariencia"><span>›</span>☀️ / 🌙 Apariencia</button>
 </nav><div class="drawer-foot">Creado por <strong>Óscar Granados</strong></div></aside>
 
@@ -94,7 +95,7 @@ html[data-theme="dark"] .creator-brand{color:#e7eeee}
 <h1 id="orderHeading">Nuevo pedido</h1><p class="sub">Selecciona al cliente y agrega los productos solicitados.</p>
 <div class="grid">
 <div class="field full"><label for="clientSelect">Seleccionar cliente registrado</label><select id="clientSelect"><option value="">Selecciona un cliente…</option></select><label style="display:flex;align-items:center;gap:8px;font-weight:600;margin-top:5px"><input id="manualClientMode" type="checkbox" style="width:auto"> Capturar cliente manualmente</label></div>
-<div id="manualClientFields" class="grid full hidden"><div class="field"><label for="manualName">Nombre del cliente *</label><input id="manualName" maxlength="100"></div><div class="field"><label for="manualPhone">Teléfono</label><input id="manualPhone" type="tel" maxlength="25"></div><div class="field full"><label for="manualAddress">Dirección</label><input id="manualAddress" maxlength="220"></div><div class="field"><label for="manualType">Tipo de cliente</label><select id="manualType"><option>Cliente final</option><option>Asociado</option></select></div><div class="field hidden" id="manualAssociateField"><label for="manualAssociate">Número de asociado *</label><input id="manualAssociate" maxlength="40"></div><label class="field full" style="display:flex;align-items:center;gap:8px;font-weight:600"><input id="saveManualClient" type="checkbox" checked style="width:auto"> Guardar este cliente en el directorio para futuros pedidos</label></div>
+<div id="manualClientFields" class="grid full hidden"><div class="field"><label for="manualName">Nombre del cliente *</label><input id="manualName" maxlength="100"></div><div class="field"><label for="manualPhone">Teléfono</label><input id="manualPhone" type="tel" maxlength="25"></div><div class="field full"><label for="manualAddress">Dirección</label><input id="manualAddress" maxlength="220"></div><div class="field" id="manualTypeField"><label for="manualType">Tipo de cliente</label><select id="manualType"><option>Cliente final</option><option>Asociado</option></select></div><div class="field hidden" id="manualAssociateField"><label for="manualAssociate">Número de asociado *</label><input id="manualAssociate" maxlength="40"></div><label class="field full" style="display:flex;align-items:center;gap:8px;font-weight:600"><input id="saveManualClient" type="checkbox" checked style="width:auto"> Guardar este cliente en el directorio para futuros pedidos</label></div>
 <div class="field"><label for="orderDate">Fecha</label><input id="orderDate" type="date"></div>
 <div class="field"><label for="orderWeek">Semana</label><input id="orderWeek" type="text" placeholder="Ej. 47"></div>
 </div>
@@ -122,7 +123,7 @@ html[data-theme="dark"] .creator-brand{color:#e7eeee}
 <div class="field"><label for="clientName">Nombre del cliente *</label><input id="clientName" required maxlength="100"></div>
 <div class="field"><label for="clientPhone">Teléfono</label><input id="clientPhone" type="tel" maxlength="25"></div>
 <div class="field full"><label for="clientAddress">Dirección</label><input id="clientAddress" maxlength="220"></div>
-<div class="field"><label for="clientType">Tipo de cliente *</label><select id="clientType"><option value="Cliente final">Cliente final</option><option value="Asociado">Asociado</option></select></div>
+<div class="field" id="clientTypeField"><label for="clientType">Tipo de cliente *</label><select id="clientType"><option value="Cliente final">Cliente final</option><option value="Asociado">Asociado</option></select></div>
 <div class="field hidden" id="associateField"><label for="associateNumber">Número de asociado *</label><input id="associateNumber" maxlength="40"></div>
 </div>
 <div class="actions"><button class="primary" type="submit" id="saveClient">Guardar cliente</button><button type="button" id="cancelClientEdit" class="hidden">Cancelar</button></div>
@@ -160,6 +161,20 @@ html[data-theme="dark"] .creator-brand{color:#e7eeee}
 </div>
 </section>
 
+<section id="view-perfil" class="hidden">
+<div class="panel">
+<h1>Perfil de usuario</h1><p class="sub">Selecciona cómo utilizas la aplicación. Las funciones y los tipos de clientes se ajustarán a tu perfil.</p>
+<div class="field"><label for="profileSelect">Tipo de perfil</label><select id="profileSelect"><option value="asociado">Asociado</option><option value="distribuidor">Distribuidor</option></select></div>
+<div class="notice" id="profileDescription"></div>
+<div class="field"><label for="uplinePhone">WhatsApp de mi distribuidor</label><input id="uplinePhone" type="tel" inputmode="tel" placeholder="Ej. 528111234567"><span class="muted">Incluye código de país. México: 52 + número de 10 dígitos. Aquí se enviarán los pedidos por WhatsApp.</span></div>
+<div class="actions"><button class="primary" id="saveProfile">Guardar perfil</button></div>
+</div>
+<div class="panel"><h2>Qué puede hacer cada perfil</h2>
+<div class="item"><b>Asociado</b><p class="muted">Registra únicamente clientes finales, prepara sus pedidos y los envía por WhatsApp a su distribuidor.</p></div>
+<div class="item"><b>Distribuidor</b><p class="muted">Registra clientes finales y asociados, captura pedidos de ambos, revisa los pedidos y lleva el control de cuáles ya subió a Betterware Plus.</p></div>
+</div>
+</section>
+
 <section id="view-apariencia" class="hidden">
 <div class="panel">
 <h1>Apariencia</h1><p class="sub">Personaliza cómo se ve Betterware Control de Pedidos en este dispositivo.</p>
@@ -176,6 +191,9 @@ const KEY='betterware_control_pedidos_v1';
 let db={clients:[],orders:[]},editingOrder=null;
 const $=id=>document.getElementById(id);
 const THEME_KEY='betterware_control_pedidos_theme';
+const PROFILE_KEY='betterware_control_pedidos_profile';
+const UPLINE_KEY='betterware_control_pedidos_upline';
+let userProfile='distribuidor',uplinePhone='';
 const themeSelect=document.getElementById('themeSelect');
 function applyTheme(theme){const selected=['light','dark','system'].includes(theme)?theme:'light';document.documentElement.dataset.theme=selected;try{localStorage.setItem(THEME_KEY,selected)}catch(e){}if(themeSelect)themeSelect.value=selected;const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.setAttribute('content',selected==='dark'?'#173b43':'#299DB6');const description=document.getElementById('themeDescription');if(description)description.textContent=selected==='dark'?'Modo oscuro activado. La apariencia se mantendrá aunque cierres la aplicación.':selected==='system'?'La aplicación seguirá automáticamente el tema configurado en tu dispositivo.':'Modo claro activado. La apariencia se mantendrá aunque cierres la aplicación.'}
 let savedTheme='system';try{savedTheme=localStorage.getItem(THEME_KEY)||'system'}catch(e){}applyTheme(savedTheme);if(themeSelect)themeSelect.addEventListener('change',()=>applyTheme(themeSelect.value));
@@ -186,7 +204,7 @@ const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
 function saveDB(){try{localStorage.setItem(KEY,JSON.stringify(db));updateStorageInfo();return true}catch(e){alert('No se pudo guardar. El almacenamiento del navegador podría estar lleno. Exporta un respaldo y libera espacio.');return false}}
 function migrateData(d){if(!d||!Array.isArray(d.clients)||!Array.isArray(d.orders))throw Error('Formato');d.orders.forEach(o=>(o.products||[]).forEach(p=>{if(p.pieces!==undefined){p.qty=(Number(p.pieces)||0)*(Number(p.qty)||0);delete p.pieces;p.total=(Number(p.qty)||0)*(Number(p.price)||0)}}));return {clients:d.clients,orders:d.orders}}
 function loadDB(){try{const raw=localStorage.getItem(KEY);if(raw){const parsed=JSON.parse(raw);db=migrateData(parsed);localStorage.setItem(KEY,JSON.stringify(db))}}catch(e){alert('No se pudieron leer o actualizar los datos guardados. Exporta un respaldo anterior si lo tienes.')} }
-function showView(name){document.querySelectorAll('main section[id^="view-"]').forEach(s=>s.classList.toggle('hidden',s.id!=='view-'+name));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('nav-active',b.dataset.view===name));if(name==='clientes')renderClients();if(name==='pedidos')renderOrders();if(name==='cierre')renderClose();if(name==='pedido')refreshClientSelect()}
+function showView(name){document.querySelectorAll('main section[id^="view-"]').forEach(s=>s.classList.toggle('hidden',s.id!=='view-'+name));document.querySelectorAll('.drawer-nav button').forEach(b=>b.classList.toggle('nav-active',b.dataset.view===name));if(name==='clientes')renderClients();if(name==='pedidos')renderOrders();if(name==='cierre')renderClose();if(name==='pedido')refreshClientSelect();if(name==='perfil')syncProfileUI()}
 document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
 function isoToday(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function weekOf(dateStr){if(!dateStr)return '';const d=new Date(dateStr+'T12:00:00');const jan1=new Date(d.getFullYear(),0,1);return String(Math.ceil((((d-jan1)/86400000)+jan1.getDay()+1)/7))}
@@ -194,13 +212,13 @@ function setDefaultDate(){ $('orderDate').value=isoToday();$('orderWeek').value=
 $('headerDate').textContent=new Date().toLocaleDateString('es-MX',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
 $('orderDate').addEventListener('change',()=>{$('orderWeek').value=weekOf($('orderDate').value)});
 function refreshClientSelect(selected=''){
-const sel=$('clientSelect');sel.innerHTML='<option value="">Selecciona un cliente…</option>'+db.clients.slice().sort((a,b)=>a.name.localeCompare(b.name,'es')).map(c=>`<option value="${esc(c.id)}">${esc(c.name)} — ${esc(c.type)}${c.type==='Asociado'?' · '+esc(c.associate||''):''}</option>`).join('');
+const sel=$('clientSelect');sel.innerHTML='<option value="">Selecciona un cliente…</option>'+db.clients.filter(c=>userProfile==='distribuidor'||c.type!=='Asociado').slice().sort((a,b)=>a.name.localeCompare(b.name,'es')).map(c=>`<option value="${esc(c.id)}">${esc(c.name)} — ${esc(c.type)}${c.type==='Asociado'?' · '+esc(c.associate||''):''}</option>`).join('');
 sel.value=selected;showClientInfo();
 }
 function showClientInfo(){const c=db.clients.find(x=>x.id===$('clientSelect').value),el=$('selectedClientInfo');if(!c){el.classList.add('hidden');el.textContent='';return}el.classList.remove('hidden');el.textContent=[c.phone,c.address,c.type==='Asociado'?'Asociado #'+(c.associate||''):c.type].filter(Boolean).join(' · ')}
 $('clientSelect').addEventListener('change',showClientInfo);
 $('manualClientMode').addEventListener('change',()=>{const manual=$('manualClientMode').checked;$('clientSelect').disabled=manual;$('manualClientFields').classList.toggle('hidden',!manual);if(manual){$('selectedClientInfo').classList.add('hidden')}else{showClientInfo()}});
-$('manualType').addEventListener('change',()=>{$('manualAssociateField').classList.toggle('hidden',$('manualType').value!=='Asociado');$('manualAssociate').required=$('manualType').value==='Asociado'});
+$('manualType').addEventListener('change',()=>{const yes=userProfile==='distribuidor'&&$('manualType').value==='Asociado';$('manualAssociateField').classList.toggle('hidden',!yes);$('manualAssociate').required=yes});
 function addProductRow(p={}){const tr=document.createElement('tr');tr.innerHTML=`<td><input aria-label="Código" class="p-code" value="${esc(p.code||'')}" placeholder="Código"></td><td><input aria-label="Nombre del producto" class="p-name" value="${esc(p.name||'')}" placeholder="Producto"></td><td><input aria-label="Cantidad" class="p-qty" type="number" min="1" step="1" value="${p.qty??1}"></td><td><input aria-label="Precio" class="p-price" type="number" min="0" step="0.01" value="${p.price??''}" placeholder="0.00"></td><td class="p-total money">${money((Number(p.qty??1)||0)*(Number(p.price)||0))}</td><td><button type="button" class="danger smallbtn remove-row" title="Quitar producto">×</button></td>`;
 tr.querySelectorAll('input').forEach(i=>i.addEventListener('input',()=>calcRow(tr)));tr.querySelector('.remove-row').addEventListener('click',()=>{tr.remove();calcOrder()});$('productRows').appendChild(tr);calcOrder()}
 function calcRow(tr){const qty=Number(tr.querySelector('.p-qty').value)||0,price=Number(tr.querySelector('.p-price').value)||0;tr.querySelector('.p-total').textContent=money(qty*price);calcOrder()}
@@ -213,7 +231,7 @@ $('cancelEdit').addEventListener('click',clearOrder);
 $('saveOrder').addEventListener('click',()=>{
 let client=db.clients.find(c=>c.id===$('clientSelect').value),products=getProducts(),manual=$('manualClientMode').checked;
 if(manual){
- const name=$('manualName').value.trim(),type=$('manualType').value,associate=$('manualAssociate').value.trim();
+ const name=$('manualName').value.trim(),type=userProfile==='distribuidor'?$('manualType').value:'Cliente final',associate=$('manualAssociate').value.trim();
  if(!name){alert('Escribe el nombre del cliente.');return}
  if(type==='Asociado'&&!associate){alert('Captura el número de asociado.');return}
  client={id:null,name,phone:$('manualPhone').value.trim(),address:$('manualAddress').value.trim(),type,associate:type==='Asociado'?associate:''};
@@ -231,22 +249,40 @@ if(editingOrder){const i=db.orders.findIndex(o=>o.id===editingOrder);if(i>=0)db.
 if(saveDB()){alert(editingOrder?'Pedido actualizado.':'Pedido guardado.');clearOrder();renderOrders()}
 });
 function renderClients(){
-$('clientCount').textContent=db.clients.length+' clientes';const term=($('clientSearch').value||'').trim().toLocaleLowerCase();const box=$('clientList');
-const matches=db.clients.filter(c=>!term||c.name.toLocaleLowerCase().includes(term)||(c.associate||'').toLocaleLowerCase().includes(term)||String(c.phone||'').toLocaleLowerCase().includes(term));
+const visibleClients=db.clients.filter(c=>userProfile==='distribuidor'||c.type!=='Asociado');$('clientCount').textContent=visibleClients.length+' clientes';const term=($('clientSearch').value||'').trim().toLocaleLowerCase();const box=$('clientList');
+const matches=visibleClients.filter(c=>!term||c.name.toLocaleLowerCase().includes(term)||(c.associate||'').toLocaleLowerCase().includes(term)||String(c.phone||'').toLocaleLowerCase().includes(term));
 if(!matches.length){box.innerHTML='<div class="empty">'+(db.clients.length?'No se encontraron clientes con esa búsqueda.':'Aún no hay clientes registrados.')+'</div>';return}
 box.innerHTML=matches.slice().sort((a,b)=>a.name.localeCompare(b.name,'es')).map(c=>`<div class="item"><div class="row between"><div class="item-title">${esc(c.name)} <span class="pill">${esc(c.type)}</span></div><div class="row"><button class="smallbtn edit-client" data-id="${esc(c.id)}">Editar</button><button class="danger smallbtn del-client" data-id="${esc(c.id)}">Eliminar</button></div></div><div class="muted">${esc(c.phone||'Sin teléfono')} · ${esc(c.address||'Sin dirección')}${c.type==='Asociado'?' · Asociado #'+esc(c.associate||''):''}</div></div>`).join('');
 box.querySelectorAll('.edit-client').forEach(b=>b.onclick=()=>editClient(b.dataset.id));box.querySelectorAll('.del-client').forEach(b=>b.onclick=()=>deleteClient(b.dataset.id))}
 $('clientSearch').addEventListener('input',renderClients);
-function editClient(id){const c=db.clients.find(x=>x.id===id);if(!c)return;$('clientId').value=c.id;$('clientName').value=c.name;$('clientPhone').value=c.phone||'';$('clientAddress').value=c.address||'';$('clientType').value=c.type;$('associateNumber').value=c.associate||'';toggleAssociate();$('saveClient').textContent='Actualizar cliente';$('cancelClientEdit').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'})}
+function editClient(id){const c=db.clients.find(x=>x.id===id);if(!c||(userProfile==='asociado'&&c.type==='Asociado'))return;$('clientId').value=c.id;$('clientName').value=c.name;$('clientPhone').value=c.phone||'';$('clientAddress').value=c.address||'';$('clientType').value=c.type;$('associateNumber').value=c.associate||'';toggleAssociate();$('saveClient').textContent='Actualizar cliente';$('cancelClientEdit').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'})}
 function resetClientForm(){$('clientForm').reset();$('clientId').value='';$('saveClient').textContent='Guardar cliente';$('cancelClientEdit').classList.add('hidden');toggleAssociate()}
 function deleteClient(id){if(db.orders.some(o=>o.clientId===id)){alert('Este cliente tiene pedidos asociados. Conserva el registro para mantener el historial.');return}if(confirm('¿Eliminar este cliente?')){db.clients=db.clients.filter(c=>c.id!==id);saveDB();renderClients();refreshClientSelect()}}
-$('clientType').addEventListener('change',toggleAssociate);function toggleAssociate(){const yes=$('clientType').value==='Asociado';$('associateField').classList.toggle('hidden',!yes);$('associateNumber').required=yes}
-$('clientForm').addEventListener('submit',e=>{e.preventDefault();const type=$('clientType').value,associate=$('associateNumber').value.trim();if(type==='Asociado'&&!associate){alert('Captura el número de asociado.');return}const id=$('clientId').value;const c={id:id||uid(),name:$('clientName').value.trim(),phone:$('clientPhone').value.trim(),address:$('clientAddress').value.trim(),type,associate:type==='Asociado'?associate:''};if(!c.name)return;if(id){const i=db.clients.findIndex(x=>x.id===id);if(i>=0)db.clients[i]=c}else db.clients.push(c);if(saveDB()){resetClientForm();renderClients();refreshClientSelect();alert('Cliente guardado.')}});
+$('clientType').addEventListener('change',toggleAssociate);function toggleAssociate(){const yes=userProfile==='distribuidor'&&$('clientType').value==='Asociado';$('associateField').classList.toggle('hidden',!yes);$('associateNumber').required=yes}
+$('clientForm').addEventListener('submit',e=>{e.preventDefault();const type=userProfile==='distribuidor'?$('clientType').value:'Cliente final',associate=$('associateNumber').value.trim();if(type==='Asociado'&&!associate){alert('Captura el número de asociado.');return}const id=$('clientId').value;const c={id:id||uid(),name:$('clientName').value.trim(),phone:$('clientPhone').value.trim(),address:$('clientAddress').value.trim(),type,associate:type==='Asociado'?associate:''};if(!c.name)return;if(id){const i=db.clients.findIndex(x=>x.id===id);if(i>=0)db.clients[i]=c}else db.clients.push(c);if(saveDB()){resetClientForm();renderClients();refreshClientSelect();alert('Cliente guardado.')}});
 $('cancelClientEdit').onclick=resetClientForm;
+function syncProfileUI(){
+$('profileSelect').value=userProfile;$('uplinePhone').value=uplinePhone;
+$('profileDescription').textContent=userProfile==='asociado'?'Perfil Asociado: solo podrás registrar clientes finales. Los pedidos se comparten con tu distribuidor por WhatsApp.':'Perfil Distribuidor: podrás registrar clientes finales y asociados, revisar pedidos y marcar los que hayas subido a Betterware Plus.';
+$('clientTypeField').classList.toggle('hidden',userProfile==='asociado');
+$('manualTypeField').classList.toggle('hidden',userProfile==='asociado');
+if(userProfile==='asociado'){$('clientType').value='Cliente final';$('manualType').value='Cliente final';$('associateField').classList.add('hidden');$('manualAssociateField').classList.add('hidden')}
+}
+$('profileSelect').addEventListener('change',()=>{userProfile=$('profileSelect').value;syncProfileUI()});
+$('saveProfile').addEventListener('click',()=>{userProfile=$('profileSelect').value;uplinePhone=$('uplinePhone').value.replace(/[^0-9]/g,'');try{localStorage.setItem(PROFILE_KEY,userProfile);localStorage.setItem(UPLINE_KEY,uplinePhone)}catch(e){}syncProfileUI();refreshClientSelect();renderClients();alert('Perfil guardado en este dispositivo.')});
+function sendOrderWhatsApp(id){
+const o=db.orders.find(x=>x.id===id);if(!o)return;
+const phone=(uplinePhone||'').replace(/[^0-9]/g,'');
+if(!phone){alert('Primero registra el WhatsApp de tu distribuidor en Menú > Perfiles y configuración.');showView('perfil');closeDrawer();return}
+const lines=o.products.map(p=>'- '+(p.code?p.code+' · ':'')+p.name+' | '+p.qty+' x '+money(p.price)+' = '+money(p.total));
+const message=['PEDIDO BETTERWARE','Perfil: '+(userProfile==='asociado'?'Asociado':'Distribuidor'),'Cliente: '+o.clientName,'Tipo: '+(o.clientType||'Cliente final'),o.clientPhone?'Teléfono: '+o.clientPhone:'',o.clientAddress?'Dirección: '+o.clientAddress:'','Fecha: '+o.date,'Semana: '+o.week,'','PRODUCTOS',...lines,'','TOTAL: '+money(o.total),'','Enviado desde Betterware Control de Pedidos.'].filter(Boolean).join('\n');
+window.open('https://wa.me/'+phone+'?text='+encodeURIComponent(message),'_blank','noopener');
+}
+
 function renderOrders(){const filter=$('orderFilter').value;let list=db.orders.filter(o=>filter==='todos'||(filter==='pendiente'?o.status!=='subido':o.status==='subido'));$('statOrders').textContent=db.orders.length;$('statPending').textContent=db.orders.filter(o=>o.status!=='subido').length;$('statSum').textContent=money(db.orders.reduce((s,o)=>s+o.total,0));const box=$('orderList');if(!list.length){box.innerHTML='<div class="empty">No hay pedidos para mostrar.</div>';return}box.innerHTML=list.map(orderCard).join('');wireOrderCards(box)}
 $('orderFilter').onchange=renderOrders;
-function orderCard(o){const c=db.clients.find(x=>x.id===o.clientId);return `<div class="item"><div class="row between"><div><div class="item-title">${esc(o.clientName||c?.name||'Cliente')} <span class="pill ${o.status==='subido'?'uploaded':'pending'}">${o.status==='subido'?'Subido a Plus':'Pendiente'}</span></div><div class="muted">${esc(o.date)} · Semana ${esc(o.week||'—')} · ${o.products.length} producto(s)</div></div><div class="money">${money(o.total)}</div></div><div class="actions"><button class="smallbtn detail-order" data-id="${esc(o.id)}">Ver detalle</button><button class="smallbtn edit-order" data-id="${esc(o.id)}">Editar</button><button class="smallbtn ${o.status==='subido'?'':'primary'} toggle-upload" data-id="${esc(o.id)}">${o.status==='subido'?'Marcar pendiente':'Marcar subido'}</button><button class="danger smallbtn delete-order" data-id="${esc(o.id)}">Eliminar</button></div><div class="detail muted hidden" id="detail-${esc(o.id)}">${o.products.map(p=>`${esc(p.code)} · ${esc(p.name)} — ${p.qty} × ${money(p.price)} = <b>${money(p.total)}</b>`).join('<br>')}</div></div>`}
-function wireOrderCards(box){box.querySelectorAll('.detail-order').forEach(b=>b.onclick=()=>{$('detail-'+b.dataset.id).classList.toggle('hidden')});box.querySelectorAll('.edit-order').forEach(b=>b.onclick=()=>editOrder(b.dataset.id));box.querySelectorAll('.delete-order').forEach(b=>b.onclick=()=>deleteOrder(b.dataset.id));box.querySelectorAll('.toggle-upload').forEach(b=>b.onclick=()=>{const o=db.orders.find(x=>x.id===b.dataset.id);if(!o)return;o.status=o.status==='subido'?'pendiente':'subido';saveDB();renderOrders();renderClose()})}
+function orderCard(o){const c=db.clients.find(x=>x.id===o.clientId);return `<div class="item"><div class="row between"><div><div class="item-title">${esc(o.clientName||c?.name||'Cliente')} <span class="pill ${o.status==='subido'?'uploaded':'pending'}">${o.status==='subido'?'Subido a Plus':'Pendiente'}</span></div><div class="muted">${esc(o.date)} · Semana ${esc(o.week||'—')} · ${o.products.length} producto(s)</div></div><div class="money">${money(o.total)}</div></div><div class="actions"><button class="smallbtn detail-order" data-id="${esc(o.id)}">Ver detalle</button><button class="smallbtn whatsapp-order" data-id="${esc(o.id)}">Enviar por WhatsApp</button><button class="smallbtn edit-order" data-id="${esc(o.id)}">Editar</button><button class="smallbtn ${o.status==='subido'?'':'primary'} toggle-upload" data-id="${esc(o.id)}">${o.status==='subido'?'Marcar pendiente':'Marcar subido'}</button><button class="danger smallbtn delete-order" data-id="${esc(o.id)}">Eliminar</button></div><div class="detail muted hidden" id="detail-${esc(o.id)}">${o.products.map(p=>`${esc(p.code)} · ${esc(p.name)} — ${p.qty} × ${money(p.price)} = <b>${money(p.total)}</b>`).join('<br>')}</div></div>`}
+function wireOrderCards(box){box.querySelectorAll('.whatsapp-order').forEach(b=>b.onclick=()=>sendOrderWhatsApp(b.dataset.id));box.querySelectorAll('.detail-order').forEach(b=>b.onclick=()=>{$('detail-'+b.dataset.id).classList.toggle('hidden')});box.querySelectorAll('.edit-order').forEach(b=>b.onclick=()=>editOrder(b.dataset.id));box.querySelectorAll('.delete-order').forEach(b=>b.onclick=()=>deleteOrder(b.dataset.id));box.querySelectorAll('.toggle-upload').forEach(b=>b.onclick=()=>{const o=db.orders.find(x=>x.id===b.dataset.id);if(!o)return;o.status=o.status==='subido'?'pendiente':'subido';saveDB();renderOrders();renderClose()})}
 function editOrder(id){const o=db.orders.find(x=>x.id===id);if(!o)return;editingOrder=id;$('orderHeading').textContent='Editar pedido';$('saveOrder').textContent='Guardar cambios';$('cancelEdit').classList.remove('hidden');refreshClientSelect(o.clientId||'');if(!o.clientId){$('manualClientMode').checked=true;$('clientSelect').disabled=true;$('manualClientFields').classList.remove('hidden');$('manualName').value=o.clientName||'';$('manualPhone').value=o.clientPhone||'';$('manualAddress').value=o.clientAddress||'';$('manualType').value=o.clientType||'Cliente final';$('manualAssociate').value=o.associate||'';$('manualAssociateField').classList.toggle('hidden',$('manualType').value!=='Asociado');$('saveManualClient').checked=false}else{$('manualClientMode').checked=false;$('clientSelect').disabled=false;$('manualClientFields').classList.add('hidden')} $('orderDate').value=o.date;$('orderWeek').value=o.week;$('productRows').innerHTML='';o.products.forEach(addProductRow);calcOrder();showView('pedido');window.scrollTo({top:0,behavior:'smooth'})}
 function deleteOrder(id){if(confirm('¿Eliminar este pedido definitivamente del dispositivo?')){db.orders=db.orders.filter(o=>o.id!==id);saveDB();renderOrders();renderClose()}}
 function renderClose(){const week=$('closeWeek').value.trim(),status=$('closeStatus').value;const list=db.orders.filter(o=>(!week||String(o.week)===week)&&(status==='todos'||(status==='pendiente'?o.status!=='subido':o.status==='subido')));$('closeSummary').textContent=`${list.length} pedido(s) · Total ${money(list.reduce((s,o)=>s+o.total,0))}`;const box=$('closeList');box.innerHTML=list.length?list.map(orderCard).join(''):'<div class="empty">No hay pedidos con esos filtros.</div>';wireOrderCards(box)}
@@ -257,7 +293,7 @@ $('exportData').onclick=()=>{const blob=new Blob([JSON.stringify({app:'Betterwar
 $('importButton').onclick=()=>$('importFile').click();
 $('importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const x=JSON.parse(await f.text()),d=x.data||x;if(!Array.isArray(d.clients)||!Array.isArray(d.orders))throw Error('Formato');if(!confirm('La restauración reemplazará los clientes y pedidos actuales. ¿Continuar?'))return;db=migrateData(d);if(saveDB()){alert('Respaldo restaurado.');refreshClientSelect();renderClients();renderOrders();renderClose()}}catch(err){alert('El archivo no parece ser un respaldo válido de Betterware.')}e.target.value=''};
 function updateStorageInfo(){try{const bytes=new Blob([localStorage.getItem(KEY)||'']).size;$('storageInfo').textContent=`Espacio aproximado utilizado por esta aplicación: ${(bytes/1024).toFixed(1)} KB.`}catch(e){}}
-loadDB();setDefaultDate();refreshClientSelect();addProductRow();renderClients();renderOrders();renderClose();updateStorageInfo();
+loadDB();try{userProfile=localStorage.getItem(PROFILE_KEY)||'distribuidor';uplinePhone=localStorage.getItem(UPLINE_KEY)||''}catch(e){}syncProfileUI();setDefaultDate();refreshClientSelect();addProductRow();renderClients();renderOrders();renderClose();updateStorageInfo();
 })();
 
 const drawer=document.getElementById('appDrawer'),backdrop=document.getElementById('drawerBackdrop');
