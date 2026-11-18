@@ -102,10 +102,17 @@ main section.view-enter{animation:ogSectionEnter .34s cubic-bezier(.2,.7,.25,1) 
 #ogIntro .og-logo-image{display:block;width:100%;height:100%;object-fit:contain;opacity:0;transform:scale(.94);animation:ogLogoReveal 1.15s .12s cubic-bezier(.2,.8,.2,1) forwards;filter:drop-shadow(0 0 18px #087fff88);}
 @keyframes ogLogoReveal{to{opacity:1;transform:scale(1)}}
 @media(prefers-reduced-motion:reduce){#ogIntro .og-logo-image{animation:none;opacity:1;transform:none}}
+
+/* Reproducción de la intro cinematográfica OG Digital Solutions */
+#ogIntro{position:fixed!important;inset:0!important;z-index:3000!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:0!important;overflow:hidden!important;background:#020711!important;opacity:1;visibility:visible;transition:opacity .55s ease,visibility .55s ease}
+#ogIntro.is-leaving{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+#ogIntro #ogIntroVideo{display:block!important;width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;background:#020711!important}
+@media(orientation:landscape){#ogIntro #ogIntroVideo{width:100%!important;height:100%!important;object-fit:contain!important}}
+@media(prefers-reduced-motion:reduce){#ogIntro{transition:none!important}}
 </style>
 </head>
 <body>
-<div id="ogIntro" role="status" aria-label="OG Digital Solutions"><img class="og-logo-image" src="assets/og-digital-solutions.png" alt="OG Digital Solutions"></div>
+<div id="ogIntro" role="status" aria-label="Presentación OG Digital Solutions"><video id="ogIntroVideo" autoplay muted playsinline webkit-playsinline preload="auto"><source src="assets/og-intro.mp4.mp4" type="video/mp4"></video></div>
 
 <header><div class="row"><button id="menuOpen" class="menu-trigger" aria-label="Abrir menú">☰ Menú</button><div class="brand">BETTERWARE <small>CONTROL DE PEDIDOS</small></div></div><div class="row"><div id="headerDate" style="font-size:12px;opacity:.9"></div></div></header>
 <main>
@@ -343,7 +350,16 @@ backdrop.addEventListener('click',closeDrawer);
 document.querySelectorAll('.drawer-nav button').forEach(b=>b.addEventListener('click',event=>{event.preventDefault();const section=b.dataset.view;try{showView(section)}finally{closeDrawer()}}));
 
 const ogIntro=document.getElementById('ogIntro');
-if(ogIntro){window.setTimeout(()=>ogIntro.classList.add('is-leaving'),3000);ogIntro.addEventListener('transitionend',()=>{if(ogIntro.classList.contains('is-leaving'))ogIntro.remove()},{once:true});}
+const ogIntroVideo=document.getElementById('ogIntroVideo');
+if(ogIntro&&ogIntroVideo){
+ let ogIntroClosed=false;
+ const closeOgIntro=()=>{if(ogIntroClosed)return;ogIntroClosed=true;ogIntro.classList.add('is-leaving');window.setTimeout(()=>ogIntro.remove(),650)};
+ ogIntroVideo.addEventListener('ended',closeOgIntro,{once:true});
+ ogIntroVideo.addEventListener('error',closeOgIntro,{once:true});
+ const playAttempt=ogIntroVideo.play();
+ if(playAttempt&&typeof playAttempt.catch==='function')playAttempt.catch(()=>closeOgIntro());
+ window.setTimeout(closeOgIntro,12000);
+}
 </script>
 </body>
 </html>
