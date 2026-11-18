@@ -96,10 +96,16 @@ html[data-theme="dark"] .creator-brand{color:#e7eeee}
 main section.view-enter{animation:ogSectionEnter .34s cubic-bezier(.2,.7,.25,1) both}
 @media(prefers-reduced-motion:reduce){#ogIntro *,main section.view-enter{animation:none!important;transition:none!important}#ogIntro .og-mark,#ogIntro .og-name,#ogIntro .og-subtitle{opacity:1;transform:none}}
 
+
+/* Imagen oficial OG Digital Solutions */
+#ogIntro{background:#020711!important;display:flex!important;align-items:center;justify-content:center;padding:0;}
+#ogIntro .og-logo-image{display:block;width:100%;height:100%;object-fit:contain;opacity:0;transform:scale(.94);animation:ogLogoReveal 1.15s .12s cubic-bezier(.2,.8,.2,1) forwards;filter:drop-shadow(0 0 18px #087fff88);}
+@keyframes ogLogoReveal{to{opacity:1;transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){#ogIntro .og-logo-image{animation:none;opacity:1;transform:none}}
 </style>
 </head>
 <body>
-<div id="ogIntro" role="status" aria-label="OG Digital Solutions"><div class="og-pulse"></div><div class="og-intro-content"><div class="og-mark"><span class="og-letters">OG</span><span class="og-sweep"></span></div><div class="og-name">OG DIGITAL</div><div class="og-subtitle">SOLUTIONS</div></div></div>
+<div id="ogIntro" role="status" aria-label="OG Digital Solutions"><img class="og-logo-image" src="assets/og-digital-solutions.png" alt="OG Digital Solutions"></div>
 
 <header><div class="row"><button id="menuOpen" class="menu-trigger" aria-label="Abrir menú">☰ Menú</button><div class="brand">BETTERWARE <small>CONTROL DE PEDIDOS</small></div></div><div class="row"><div id="headerDate" style="font-size:12px;opacity:.9"></div></div></header>
 <main>
