@@ -91,7 +91,7 @@ html[data-theme="dark"] .radio-player{background:#ffffff12}
 </style>
 </head>
 <body>
-<header><div class="row"><button id="menuOpen" class="menu-trigger" aria-label="Abrir menú">☰ Menú</button><div class="brand">BETTERWARE <small>CONTROL DE PEDIDOS</small></div></div><div class="row"><div class="radio-player"><span class="radio-label">♫ Radio</span><div class="radio-tools"><select id="radioStation" aria-label="Seleccionar estación"><option value="https://stream-46.zeno.fm/k8yuexp35k0uv">Viejitas Pero Bonitas</option></select><button type="button" id="radioAddToggle">＋ Estación</button></div><audio id="radioAudio" controls preload="none" aria-label="Reproductor de Viejitas Pero Bonitas Radio"><source src="https://stream-46.zeno.fm/k8yuexp35k0uv" type="audio/mpeg">Tu navegador no puede reproducir este audio.</audio><div class="radio-wrap"><div class="radio-add" id="radioAddPanel"><strong>Agregar estación de radio</strong><input id="radioStationName" placeholder="Nombre de la estación" maxlength="60"><input id="radioStationUrl" type="url" placeholder="Enlace directo de audio (https://…)"><div class="row"><button type="button" class="primary" id="radioSave">Guardar</button><button type="button" id="radioCancel">Cancelar</button></div><small>Usa un enlace directo compatible de audio, no la página web de la emisora.</small></div></div><label class="radio-volume" for="radioVolume">Volumen <input id="radioVolume" type="range" min="0" max="1" step="0.01" value="0.7" aria-label="Volumen independiente de la radio"></label></div><div id="headerDate" style="font-size:12px;opacity:.9"></div></div></header>
+<header><div class="row"><button id="menuOpen" class="menu-trigger" aria-label="Abrir menú">☰ Menú</button><div class="brand">BETTERWARE <small>CONTROL DE PEDIDOS</small></div></div><div class="row"><div class="radio-player"><span class="radio-label">♫ Radio</span><div class="radio-tools"><select id="radioStation" aria-label="Seleccionar estación"><option value="https://stream-46.zeno.fm/k8yuexp35k0uv">Viejitas Pero Bonitas</option></select><button type="button" id="radioAddToggle">＋ Estación</button></div><audio id="radioAudio" controls preload="none" aria-label="Reproductor de Viejitas Pero Bonitas Radio"><source src="https://stream-46.zeno.fm/k8yuexp35k0uv" type="audio/mpeg">Tu navegador no puede reproducir este audio.</audio><div class="radio-wrap"><div class="radio-add" id="radioAddPanel"><strong>Agregar estación de radio</strong><input id="radioStationName" placeholder="Nombre de la estación" maxlength="60"><input id="radioStationUrl" type="url" placeholder="Enlace de radio o página web (https://…)"><div class="row"><button type="button" class="primary" id="radioSave">Guardar</button><button type="button" id="radioCancel">Cancelar</button></div><small>Puedes pegar la página de la emisora o un enlace directo. Si la página bloquea el acceso externo, necesitaremos el enlace de transmisión.</small></div></div><label class="radio-volume" for="radioVolume">Volumen <input id="radioVolume" type="range" min="0" max="1" step="0.01" value="0.7" aria-label="Volumen independiente de la radio"></label></div><div id="headerDate" style="font-size:12px;opacity:.9"></div></div></header>
 <main>
 <div id="drawerBackdrop" class="drawer-backdrop"></div><aside id="appDrawer" class="app-drawer" aria-label="Menú principal"><div class="drawer-head"><div class="drawer-brand">BETTERWARE<br><small>CONTROL DE PEDIDOS</small></div><button id="menuClose" aria-label="Cerrar menú">✕</button></div><nav class="drawer-nav">
 <button class="nav-active" data-view="pedido"><span>›</span>＋ Nuevo pedido</button>
@@ -176,7 +176,7 @@ html[data-theme="dark"] .radio-player{background:#ffffff12}
 <section id="view-apariencia" class="hidden">
 <div class="panel">
 <h1>Apariencia</h1><p class="sub">Personaliza cómo se ve Betterware Control de Pedidos en este dispositivo.</p>
-<div class="field"><label for="themeSelect">Tema de la aplicación</label><select id="themeSelect"><option value="light">☀️ Modo claro</option><option value="dark">🌙 Modo oscuro</option><option value="system">⚙️ Automático (según el dispositivo)</option></select></div>
+<div class="field"><label for="themeSelect">Tema de la aplicación</label><select id="themeSelect"><option value="system">⚙️ Automático (según el dispositivo)</option><option value="light">☀️ Modo claro</option><option value="dark">🌙 Modo oscuro</option></select></div>
 <div class="notice" id="themeDescription">Elige el tema que te resulte más cómodo. Tu preferencia se guardará en este dispositivo.</div>
 </div>
 </section>
@@ -192,7 +192,7 @@ const $=id=>document.getElementById(id);
 const THEME_KEY='betterware_control_pedidos_theme';
 const themeSelect=document.getElementById('themeSelect');
 function applyTheme(theme){const selected=['light','dark','system'].includes(theme)?theme:'light';document.documentElement.dataset.theme=selected;try{localStorage.setItem(THEME_KEY,selected)}catch(e){}if(themeSelect)themeSelect.value=selected;const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.setAttribute('content',selected==='dark'?'#173b43':'#299DB6');const description=document.getElementById('themeDescription');if(description)description.textContent=selected==='dark'?'Modo oscuro activado. La apariencia se mantendrá aunque cierres la aplicación.':selected==='system'?'La aplicación seguirá automáticamente el tema configurado en tu dispositivo.':'Modo claro activado. La apariencia se mantendrá aunque cierres la aplicación.'}
-let savedTheme='light';try{savedTheme=localStorage.getItem(THEME_KEY)||'light'}catch(e){}applyTheme(savedTheme);if(themeSelect)themeSelect.addEventListener('change',()=>applyTheme(themeSelect.value));
+let savedTheme='system';try{savedTheme=localStorage.getItem(THEME_KEY)||'system'}catch(e){}applyTheme(savedTheme);if(themeSelect)themeSelect.addEventListener('change',()=>applyTheme(themeSelect.value));
 
 const money=n=>new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN'}).format(Number(n)||0);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -290,7 +290,33 @@ radioSelect.addEventListener('change',()=>{const wasPlaying=!radioAudio.paused;r
 const radioPanel=document.getElementById('radioAddPanel');
 document.getElementById('radioAddToggle').addEventListener('click',()=>radioPanel.classList.toggle('open'));
 document.getElementById('radioCancel').addEventListener('click',()=>radioPanel.classList.remove('open'));
-document.getElementById('radioSave').addEventListener('click',()=>{const name=document.getElementById('radioStationName').value.trim(),url=document.getElementById('radioStationUrl').value.trim();if(!name||!(url.startsWith('https://')||url.startsWith('http://'))){alert('Escribe el nombre y un enlace http(s) válido.');return}if(radioStations.some(x=>x.url===url)){alert('Esa estación ya está registrada.');return}radioStations.push({name,url});try{localStorage.setItem(RADIO_KEY,JSON.stringify(radioStations.filter(x=>!defaultStations.some(d=>d.url===x.url))))}catch(e){}renderRadioStations(url);radioAudio.src=url;radioAudio.load();radioPanel.classList.remove('open');document.getElementById('radioStationName').value='';document.getElementById('radioStationUrl').value=''});
+async function resolveRadioUrl(pageUrl){
+ if(/\\.(mp3|aac|ogg|opus|m3u8|mp4)(\\?|$)/i.test(pageUrl))return pageUrl;
+ try{
+  const response=await fetch(pageUrl,{mode:'cors'});
+  if(!response.ok)throw Error('La emisora no permite acceso externo');
+  const html=await response.text();
+  const doc=new DOMParser().parseFromString(html,'text/html');
+  const candidates=[...doc.querySelectorAll('audio[src],audio source[src],source[src],meta[property="og:audio"],meta[name="twitter:player:stream"]')].map(el=>el.getAttribute('src')||el.getAttribute('content')).filter(Boolean);
+  const found=candidates.map(x=>{try{return new URL(x,pageUrl).href}catch(e){return ''}}).find(x=>/\\.(mp3|aac|ogg|opus|m3u8|mp4)(\\?|$)/i.test(x)||/stream|radio|listen|live/i.test(x));
+  if(found)return found;
+ }catch(e){throw Error('La página no permite detectar su audio automáticamente. Necesitamos el enlace directo de transmisión.')}
+ throw Error('No se encontró una transmisión de audio compatible en esa página.');
+}
+document.getElementById('radioSave').addEventListener('click',async()=>{
+ const name=document.getElementById('radioStationName').value.trim(),inputUrl=document.getElementById('radioStationUrl').value.trim(),saveButton=document.getElementById('radioSave');
+ if(!name||!/^https?:\\/\\//i.test(inputUrl)){alert('Escribe el nombre y un enlace http(s) válido.');return}
+ if(radioStations.some(x=>x.pageUrl===inputUrl||x.url===inputUrl)){alert('Esa estación ya está registrada.');return}
+ saveButton.disabled=true;saveButton.textContent='Buscando transmisión…';
+ try{
+  const streamUrl=await resolveRadioUrl(inputUrl);
+  radioStations.push({name,url:streamUrl,pageUrl:inputUrl});
+  try{localStorage.setItem(RADIO_KEY,JSON.stringify(radioStations.filter(x=>!defaultStations.some(d=>d.url===x.url))))}catch(e){}
+  renderRadioStations(streamUrl);radioAudio.src=streamUrl;radioAudio.load();radioPanel.classList.remove('open');
+  document.getElementById('radioStationName').value='';document.getElementById('radioStationUrl').value='';
+ }catch(err){alert(err.message)}
+ finally{saveButton.disabled=false;saveButton.textContent='Guardar'}
+});if(!name||!(url.startsWith('https://')||url.startsWith('http://'))){alert('Escribe el nombre y un enlace http(s) válido.');return}if(radioStations.some(x=>x.url===url)){alert('Esa estación ya está registrada.');return}radioStations.push({name,url});try{localStorage.setItem(RADIO_KEY,JSON.stringify(radioStations.filter(x=>!defaultStations.some(d=>d.url===x.url))))}catch(e){}renderRadioStations(url);radioAudio.src=url;radioAudio.load();radioPanel.classList.remove('open');document.getElementById('radioStationName').value='';document.getElementById('radioStationUrl').value=''});
 </script>
 </body>
 </html>
