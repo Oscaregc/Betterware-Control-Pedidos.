@@ -62,19 +62,39 @@ html[data-theme="dark"] .app-footer{border-color:#344448}
 html[data-theme="dark"] .creator-brand{color:#e7eeee}
 html[data-theme="dark"] .radio-player{background:#ffffff12}
 @media(prefers-color-scheme:dark){html[data-theme="system"]{color-scheme:dark}html[data-theme="system"] body{background:#111719;color:#e7eeee}html[data-theme="system"] header{background:#173b43;color:#f5ffff}html[data-theme="system"] .panel,html[data-theme="system"] .item{background:#1b2528;border-color:#344448;box-shadow:none}html[data-theme="system"] nav button{background:#263438;color:#dce8e9}html[data-theme="system"] nav button.nav-active{background:#299DB6;color:#fff}html[data-theme="system"] button{background:#2b3a3e;color:#e7eeee}html[data-theme="system"] button.primary{background:#217F94;color:#fff}html[data-theme="system"] button.danger{background:#492b2b;color:#ffb8b1}html[data-theme="system"] input,html[data-theme="system"] select,html[data-theme="system"] textarea{background:#11191c;color:#e7eeee;border-color:#46575b}html[data-theme="system"] label{color:#c5d3d5}html[data-theme="system"] th,html[data-theme="system"] td{border-color:#344448}html[data-theme="system"] th,html[data-theme="system"] .muted,html[data-theme="system"] .sub,html[data-theme="system"] .empty{color:#aababc}html[data-theme="system"] .stat,html[data-theme="system"] .notice{background:#24383d;color:#dce9ea}html[data-theme="system"] .stat b,html[data-theme="system"] .total{color:#70c9d8}html[data-theme="system"] .pill{background:#24454b;color:#9ce0eb}html[data-theme="system"] .pill.pending{background:#493d24;color:#f3d28b}html[data-theme="system"] .pill.uploaded{background:#263e55;color:#a9d1ff}html[data-theme="system"] .app-footer{border-color:#344448}html[data-theme="system"] .creator-brand{color:#e7eeee}}
+ 
+.menu-trigger{display:inline-flex;align-items:center;gap:8px;background:#ffffff20;color:#fff;border:1px solid #ffffff55}
+.drawer-backdrop{position:fixed;inset:0;background:#07171988;z-index:1000;opacity:0;pointer-events:none;transition:opacity .2s}
+.drawer-backdrop.open{opacity:1;pointer-events:auto}
+.app-drawer{position:fixed;z-index:1001;inset:0 auto 0 0;width:min(82vw,310px);background:var(--bg);color:var(--ink);padding:20px 16px;box-shadow:8px 0 32px #0002;transform:translateX(-105%);transition:transform .22s ease;overflow:auto}
+.app-drawer.open{transform:translateX(0)}
+.drawer-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.drawer-brand{font-weight:850;color:var(--green2);font-size:17px}
+.drawer-nav{display:grid;gap:7px}
+.drawer-nav button{width:100%;text-align:left;background:transparent;color:var(--ink);padding:12px;border-radius:10px}
+.drawer-nav button.nav-active{background:var(--green);color:white}
+.drawer-nav button span{display:inline-block;width:28px}
+.drawer-foot{border-top:1px solid var(--line);margin-top:18px;padding-top:14px;color:var(--muted);font-size:12px}
+.radio-tools{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.radio-tools select{width:auto;max-width:160px;padding:6px;font-size:12px}
+.radio-tools button{padding:7px 9px;font-size:12px}
+.radio-add{display:none;position:absolute;right:12px;top:calc(100% + 8px);z-index:20;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:12px;width:min(310px,90vw);box-shadow:0 8px 28px #0002}
+.radio-add.open{display:grid;gap:8px}
+.radio-wrap{position:relative}
+@media(max-width:640px){header{align-items:flex-start}.radio-player{max-width:100%}.radio-player audio{width:145px}.radio-tools select{max-width:130px}}
 </style>
 </head>
 <body>
-<header><div class="brand">BETTERWARE <small>CONTROL DE PEDIDOS</small></div><div class="row"><div class="radio-player"><span class="radio-label">♫ Viejitas Pero Bonitas · En vivo</span><audio id="radioAudio" controls preload="none" aria-label="Reproductor de Viejitas Pero Bonitas Radio"><source src="https://stream-46.zeno.fm/k8yuexp35k0uv" type="audio/mpeg">Tu navegador no puede reproducir este audio.</audio><label class="radio-volume" for="radioVolume">Volumen <input id="radioVolume" type="range" min="0" max="1" step="0.01" value="0.7" aria-label="Volumen independiente de la radio"></label></div><div id="headerDate" style="font-size:12px;opacity:.9"></div></div></header>
+<header><div class="row"><button id="menuOpen" class="menu-trigger" aria-label="Abrir menú">☰ Menú</button><div class="brand">BETTERWARE <small>CONTROL DE PEDIDOS</small></div></div><div class="row"><div class="radio-player"><span class="radio-label">♫ Radio</span><div class="radio-tools"><select id="radioStation" aria-label="Seleccionar estación"><option value="https://stream-46.zeno.fm/k8yuexp35k0uv">Viejitas Pero Bonitas</option></select><button type="button" id="radioAddToggle">＋ Estación</button></div><audio id="radioAudio" controls preload="none" aria-label="Reproductor de Viejitas Pero Bonitas Radio"><source src="https://stream-46.zeno.fm/k8yuexp35k0uv" type="audio/mpeg">Tu navegador no puede reproducir este audio.</audio><div class="radio-wrap"><div class="radio-add" id="radioAddPanel"><strong>Agregar estación de radio</strong><input id="radioStationName" placeholder="Nombre de la estación" maxlength="60"><input id="radioStationUrl" type="url" placeholder="Enlace directo de audio (https://…)"><div class="row"><button type="button" class="primary" id="radioSave">Guardar</button><button type="button" id="radioCancel">Cancelar</button></div><small>Usa un enlace directo compatible de audio, no la página web de la emisora.</small></div></div><label class="radio-volume" for="radioVolume">Volumen <input id="radioVolume" type="range" min="0" max="1" step="0.01" value="0.7" aria-label="Volumen independiente de la radio"></label></div><div id="headerDate" style="font-size:12px;opacity:.9"></div></div></header>
 <main>
-<nav>
-<button class="nav-active" data-view="pedido">＋ Nuevo pedido</button>
-<button data-view="clientes">Clientes</button>
-<button data-view="pedidos">Pedidos guardados</button>
-<button data-view="cierre">Finalizar / revisar</button>
-<button data-view="respaldo">Respaldo</button>
-<button data-view="apariencia">☀️ / 🌙 Apariencia</button>
-</nav>
+<div id="drawerBackdrop" class="drawer-backdrop"></div><aside id="appDrawer" class="app-drawer" aria-label="Menú principal"><div class="drawer-head"><div class="drawer-brand">BETTERWARE<br><small>CONTROL DE PEDIDOS</small></div><button id="menuClose" aria-label="Cerrar menú">✕</button></div><nav class="drawer-nav">
+<button class="nav-active" data-view="pedido"><span>›</span>＋ Nuevo pedido</button>
+<button data-view="clientes"><span>›</span>Clientes</button>
+<button data-view="pedidos"><span>›</span>Pedidos guardados</button>
+<button data-view="cierre"><span>›</span>Finalizar / revisar</button>
+<button data-view="respaldo"><span>›</span>Respaldo</button>
+<button data-view="apariencia"><span>›</span>☀️ / 🌙 Apariencia</button>
+</nav><div class="drawer-foot">Creado por <strong>Óscar Granados</strong></div></aside>
 
 <section id="view-pedido">
 <div class="panel">
@@ -247,6 +267,24 @@ $('importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{co
 function updateStorageInfo(){try{const bytes=new Blob([localStorage.getItem(KEY)||'']).size;$('storageInfo').textContent=`Espacio aproximado utilizado por esta aplicación: ${(bytes/1024).toFixed(1)} KB.`}catch(e){}}
 loadDB();setDefaultDate();refreshClientSelect();addProductRow();renderClients();renderOrders();renderClose();updateStorageInfo();
 })();
+
+const drawer=document.getElementById('appDrawer'),backdrop=document.getElementById('drawerBackdrop');
+function closeDrawer(){drawer.classList.remove('open');backdrop.classList.remove('open')}
+document.getElementById('menuOpen').addEventListener('click',()=>{drawer.classList.add('open');backdrop.classList.add('open')});
+document.getElementById('menuClose').addEventListener('click',closeDrawer);
+backdrop.addEventListener('click',closeDrawer);
+document.querySelectorAll('.drawer-nav button').forEach(b=>b.addEventListener('click',()=>{showView(b.dataset.view);closeDrawer()}));
+const RADIO_KEY='bw_radio_stations_v1',radioAudio=document.getElementById('radioAudio'),radioSelect=document.getElementById('radioStation');
+const defaultStations=[{name:'Viejitas Pero Bonitas',url:'https://stream-46.zeno.fm/k8yuexp35k0uv'}];
+let radioStations=defaultStations.slice();
+try{const saved=JSON.parse(localStorage.getItem(RADIO_KEY)||'[]');if(Array.isArray(saved))radioStations=defaultStations.concat(saved.filter(x=>x&&x.name&&x.url&&!defaultStations.some(d=>d.url===x.url)))}catch(e){}
+function renderRadioStations(selected){radioSelect.innerHTML='';radioStations.forEach(st=>{const o=document.createElement('option');o.value=st.url;o.textContent=st.name;radioSelect.appendChild(o)});if(selected)radioSelect.value=selected}
+renderRadioStations(radioAudio.querySelector('source')?.src||defaultStations[0].url);
+radioSelect.addEventListener('change',()=>{const wasPlaying=!radioAudio.paused;radioAudio.src=radioSelect.value;radioAudio.load();if(wasPlaying)radioAudio.play().catch(()=>{})});
+const radioPanel=document.getElementById('radioAddPanel');
+document.getElementById('radioAddToggle').addEventListener('click',()=>radioPanel.classList.toggle('open'));
+document.getElementById('radioCancel').addEventListener('click',()=>radioPanel.classList.remove('open'));
+document.getElementById('radioSave').addEventListener('click',()=>{const name=document.getElementById('radioStationName').value.trim(),url=document.getElementById('radioStationUrl').value.trim();if(!name||!(url.startsWith('https://')||url.startsWith('http://'))){alert('Escribe el nombre y un enlace http(s) válido.');return}if(radioStations.some(x=>x.url===url)){alert('Esa estación ya está registrada.');return}radioStations.push({name,url});try{localStorage.setItem(RADIO_KEY,JSON.stringify(radioStations.filter(x=>!defaultStations.some(d=>d.url===x.url))))}catch(e){}renderRadioStations(url);radioAudio.src=url;radioAudio.load();radioPanel.classList.remove('open');document.getElementById('radioStationName').value='';document.getElementById('radioStationUrl').value=''});
 </script>
 </body>
 </html>
