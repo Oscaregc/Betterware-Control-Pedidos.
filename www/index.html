@@ -78,9 +78,15 @@ html[data-theme="dark"] .radio-player{background:#ffffff12}
 .radio-tools{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .radio-tools select{width:auto;max-width:160px;padding:6px;font-size:12px}
 .radio-tools button{padding:7px 9px;font-size:12px}
-.radio-add{display:none;position:absolute;right:12px;top:calc(100% + 8px);z-index:20;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:12px;width:min(310px,90vw);box-shadow:0 8px 28px #0002}
-.radio-add.open{display:grid;gap:8px}
-.radio-wrap{position:relative}
+.radio-add{display:none;position:fixed;z-index:1200;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));top:auto;width:auto;max-width:480px;max-height:65dvh;overflow-y:auto;overscroll-behavior:contain;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 12px 36px #0004;margin-left:auto;margin-right:auto}
+.radio-add.open{display:grid;gap:10px}
+.radio-add input{width:100%;min-width:0;box-sizing:border-box}
+.radio-add .row{display:flex;gap:8px;flex-wrap:wrap}
+.radio-add .row button{flex:1;min-width:100px}
+.radio-wrap{position:static}
+#radioAddToggle{white-space:nowrap}
+.drawer-nav button{cursor:pointer}
+@media(max-width:640px){.radio-player{position:relative;z-index:2}.radio-add{max-height:70dvh;left:10px;right:10px;bottom:max(10px,env(safe-area-inset-bottom))}}
 @media(max-width:640px){header{align-items:flex-start}.radio-player{max-width:100%}.radio-player audio{width:145px}.radio-tools select{max-width:130px}}
 </style>
 </head>
@@ -273,7 +279,7 @@ function closeDrawer(){drawer.classList.remove('open');backdrop.classList.remove
 document.getElementById('menuOpen').addEventListener('click',()=>{drawer.classList.add('open');backdrop.classList.add('open')});
 document.getElementById('menuClose').addEventListener('click',closeDrawer);
 backdrop.addEventListener('click',closeDrawer);
-document.querySelectorAll('.drawer-nav button').forEach(b=>b.addEventListener('click',()=>{showView(b.dataset.view);closeDrawer()}));
+document.querySelectorAll('.drawer-nav button').forEach(b=>b.addEventListener('click',event=>{event.preventDefault();const section=b.dataset.view;try{showView(section)}finally{closeDrawer()}}));
 const RADIO_KEY='bw_radio_stations_v1',radioAudio=document.getElementById('radioAudio'),radioSelect=document.getElementById('radioStation');
 const defaultStations=[{name:'Viejitas Pero Bonitas',url:'https://stream-46.zeno.fm/k8yuexp35k0uv'}];
 let radioStations=defaultStations.slice();
