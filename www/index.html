@@ -9,7 +9,7 @@
 :root{--green:#299DB6;--green2:#217F94;--mint:#E5F4F7;--bg:#F5FAFB;--ink:#1D292C;--muted:#68777B;--line:#DCE8EB;--red:#B42318;--amber:#946200}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
 header{background:var(--green);color:white;padding:17px max(16px,calc((100% - 1100px)/2));display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.radio-player{display:flex;align-items:center;gap:9px;flex-wrap:wrap;background:#ffffff18;border:1px solid #ffffff55;border-radius:12px;padding:7px 10px}.radio-label{font-size:12px;font-weight:750;white-space:nowrap}.radio-player audio{width:210px;height:32px;max-width:55vw}.radio-volume{display:flex;align-items:center;gap:6px;font-size:11px;white-space:nowrap}.radio-volume input{width:78px;padding:0;accent-color:#fff}.brand{font-weight:850;letter-spacing:.4px;font-size:18px}.brand small{display:block;font-size:12px;font-weight:500;opacity:.9;letter-spacing:0}
+.brand{font-weight:850;letter-spacing:.4px;font-size:18px}.brand small{display:block;font-size:12px;font-weight:500;opacity:.9;letter-spacing:0}
 main{max-width:1100px;margin:0 auto;padding:18px 14px 40px}
 nav{display:flex;flex-wrap:wrap;gap:8px;overflow:visible;padding:2px 0 14px}
 button,.btn{border:0;border-radius:10px;padding:10px 14px;font:inherit;font-weight:650;cursor:pointer;background:#e6eee8;color:var(--green2)}
@@ -36,7 +36,7 @@ td input{padding:8px;min-width:72px}.product-table{min-width:800px}
 .notice{padding:11px 13px;border-radius:10px;background:#f1f6f2;color:#425047;font-size:13px;margin:10px 0}
 .smallbtn{padding:7px 9px;font-size:12px}.money{white-space:nowrap;font-weight:750}
 footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}.app-footer{line-height:1.7;border-top:1px solid var(--line);margin-top:18px}.creator-brand{font-size:14px;font-weight:850;letter-spacing:.4px;color:var(--ink);margin-top:9px}.creator-contact{display:inline-block;margin-top:9px;padding:8px 12px;border-radius:9px;background:#168653;color:#fff;text-decoration:none;font-weight:750}.creator-copyright{font-size:10px;margin-top:7px}
-@media(max-width:620px){header{align-items:flex-start}.radio-player{width:100%;justify-content:space-between}.radio-player audio{width:min(100%,220px);max-width:62vw}.radio-volume input{width:64px}main{padding:13px 10px 30px}.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.statgrid{grid-template-columns:repeat(3,1fr)}.stat{padding:10px}.stat b{font-size:18px}.panel{padding:14px}h1{font-size:21px}}
+@media(max-width:620px){header{align-items:flex-start}main{padding:13px 10px 30px}.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.statgrid{grid-template-columns:repeat(3,1fr)}.stat{padding:10px}.stat b{font-size:18px}.panel{padding:14px}h1{font-size:21px}}
 
 /* Apariencia: tema claro, oscuro y automático */
 html[data-theme="dark"]{color-scheme:dark}
@@ -60,7 +60,6 @@ html[data-theme="dark"] .pill.pending{background:#493d24;color:#f3d28b}
 html[data-theme="dark"] .pill.uploaded{background:#263e55;color:#a9d1ff}
 html[data-theme="dark"] .app-footer{border-color:#344448}
 html[data-theme="dark"] .creator-brand{color:#e7eeee}
-html[data-theme="dark"] .radio-player{background:#ffffff12}
 @media(prefers-color-scheme:dark){html[data-theme="system"]{color-scheme:dark}html[data-theme="system"] body{background:#111719;color:#e7eeee}html[data-theme="system"] header{background:#173b43;color:#f5ffff}html[data-theme="system"] .panel,html[data-theme="system"] .item{background:#1b2528;border-color:#344448;box-shadow:none}html[data-theme="system"] nav button{background:#263438;color:#dce8e9}html[data-theme="system"] nav button.nav-active{background:#299DB6;color:#fff}html[data-theme="system"] button{background:#2b3a3e;color:#e7eeee}html[data-theme="system"] button.primary{background:#217F94;color:#fff}html[data-theme="system"] button.danger{background:#492b2b;color:#ffb8b1}html[data-theme="system"] input,html[data-theme="system"] select,html[data-theme="system"] textarea{background:#11191c;color:#e7eeee;border-color:#46575b}html[data-theme="system"] label{color:#c5d3d5}html[data-theme="system"] th,html[data-theme="system"] td{border-color:#344448}html[data-theme="system"] th,html[data-theme="system"] .muted,html[data-theme="system"] .sub,html[data-theme="system"] .empty{color:#aababc}html[data-theme="system"] .stat,html[data-theme="system"] .notice{background:#24383d;color:#dce9ea}html[data-theme="system"] .stat b,html[data-theme="system"] .total{color:#70c9d8}html[data-theme="system"] .pill{background:#24454b;color:#9ce0eb}html[data-theme="system"] .pill.pending{background:#493d24;color:#f3d28b}html[data-theme="system"] .pill.uploaded{background:#263e55;color:#a9d1ff}html[data-theme="system"] .app-footer{border-color:#344448}html[data-theme="system"] .creator-brand{color:#e7eeee}}
  
 .menu-trigger{display:inline-flex;align-items:center;gap:8px;background:#ffffff20;color:#fff;border:1px solid #ffffff55}
@@ -75,23 +74,11 @@ html[data-theme="dark"] .radio-player{background:#ffffff12}
 .drawer-nav button.nav-active{background:var(--green);color:white}
 .drawer-nav button span{display:inline-block;width:28px}
 .drawer-foot{border-top:1px solid var(--line);margin-top:18px;padding-top:14px;color:var(--muted);font-size:12px}
-.radio-tools{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.radio-tools select{width:auto;max-width:160px;padding:6px;font-size:12px}
-.radio-tools button{padding:7px 9px;font-size:12px}
-.radio-add{display:none;position:fixed;z-index:1200;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));top:auto;width:auto;max-width:480px;max-height:65dvh;overflow-y:auto;overscroll-behavior:contain;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 12px 36px #0004;margin-left:auto;margin-right:auto}
-.radio-add.open{display:grid;gap:10px}
-.radio-add input{width:100%;min-width:0;box-sizing:border-box}
-.radio-add .row{display:flex;gap:8px;flex-wrap:wrap}
-.radio-add .row button{flex:1;min-width:100px}
-.radio-wrap{position:static}
-#radioAddToggle{white-space:nowrap}
 .drawer-nav button{cursor:pointer}
-@media(max-width:640px){.radio-player{position:relative;z-index:2}.radio-add{max-height:70dvh;left:10px;right:10px;bottom:max(10px,env(safe-area-inset-bottom))}}
-@media(max-width:640px){header{align-items:flex-start}.radio-player{max-width:100%}.radio-player audio{width:145px}.radio-tools select{max-width:130px}}
 </style>
 </head>
 <body>
-<header><div class="row"><button id="menuOpen" class="menu-trigger" aria-label="Abrir menú">☰ Menú</button><div class="brand">BETTERWARE <small>CONTROL DE PEDIDOS</small></div></div><div class="row"><div class="radio-player"><span class="radio-label">♫ Radio</span><div class="radio-tools"><select id="radioStation" aria-label="Seleccionar estación"><option value="https://stream-46.zeno.fm/k8yuexp35k0uv">Viejitas Pero Bonitas</option></select><button type="button" id="radioAddToggle">＋ Estación</button></div><audio id="radioAudio" controls preload="none" aria-label="Reproductor de Viejitas Pero Bonitas Radio"><source src="https://stream-46.zeno.fm/k8yuexp35k0uv" type="audio/mpeg">Tu navegador no puede reproducir este audio.</audio><div class="radio-wrap"><div class="radio-add" id="radioAddPanel"><strong>Agregar estación de radio</strong><input id="radioStationName" placeholder="Nombre de la estación" maxlength="60"><input id="radioStationUrl" type="url" placeholder="Enlace de radio o página web (https://…)"><div class="row"><button type="button" class="primary" id="radioSave">Guardar</button><button type="button" id="radioCancel">Cancelar</button></div><small>Puedes pegar la página de la emisora o un enlace directo. Si la página bloquea el acceso externo, necesitaremos el enlace de transmisión.</small></div></div><label class="radio-volume" for="radioVolume">Volumen <input id="radioVolume" type="range" min="0" max="1" step="0.01" value="0.7" aria-label="Volumen independiente de la radio"></label></div><div id="headerDate" style="font-size:12px;opacity:.9"></div></div></header>
+<header><div class="row"><button id="menuOpen" class="menu-trigger" aria-label="Abrir menú">☰ Menú</button><div class="brand">BETTERWARE <small>CONTROL DE PEDIDOS</small></div></div><div class="row"><div id="headerDate" style="font-size:12px;opacity:.9"></div></div></header>
 <main>
 <div id="drawerBackdrop" class="drawer-backdrop"></div><aside id="appDrawer" class="app-drawer" aria-label="Menú principal"><div class="drawer-head"><div class="drawer-brand">BETTERWARE<br><small>CONTROL DE PEDIDOS</small></div><button id="menuClose" aria-label="Cerrar menú">✕</button></div><nav class="drawer-nav">
 <button class="nav-active" data-view="pedido"><span>›</span>＋ Nuevo pedido</button>
@@ -186,7 +173,6 @@ html[data-theme="dark"] .radio-player{background:#ffffff12}
 (() => {
 'use strict';
 const KEY='betterware_control_pedidos_v1';
-const radioAudio=document.getElementById('radioAudio');const radioVolume=document.getElementById('radioVolume');if(radioAudio&&radioVolume){radioAudio.volume=Number(radioVolume.value);radioVolume.addEventListener('input',()=>{radioAudio.volume=Number(radioVolume.value)})}
 let db={clients:[],orders:[]},editingOrder=null;
 const $=id=>document.getElementById(id);
 const THEME_KEY='betterware_control_pedidos_theme';
@@ -280,43 +266,6 @@ document.getElementById('menuOpen').addEventListener('click',()=>{drawer.classLi
 document.getElementById('menuClose').addEventListener('click',closeDrawer);
 backdrop.addEventListener('click',closeDrawer);
 document.querySelectorAll('.drawer-nav button').forEach(b=>b.addEventListener('click',event=>{event.preventDefault();const section=b.dataset.view;try{showView(section)}finally{closeDrawer()}}));
-const RADIO_KEY='bw_radio_stations_v1',radioAudio=document.getElementById('radioAudio'),radioSelect=document.getElementById('radioStation');
-const defaultStations=[{name:'Viejitas Pero Bonitas',url:'https://stream-46.zeno.fm/k8yuexp35k0uv'}];
-let radioStations=defaultStations.slice();
-try{const saved=JSON.parse(localStorage.getItem(RADIO_KEY)||'[]');if(Array.isArray(saved))radioStations=defaultStations.concat(saved.filter(x=>x&&x.name&&x.url&&!defaultStations.some(d=>d.url===x.url)))}catch(e){}
-function renderRadioStations(selected){radioSelect.innerHTML='';radioStations.forEach(st=>{const o=document.createElement('option');o.value=st.url;o.textContent=st.name;radioSelect.appendChild(o)});if(selected)radioSelect.value=selected}
-renderRadioStations(radioAudio.querySelector('source')?.src||defaultStations[0].url);
-radioSelect.addEventListener('change',()=>{const wasPlaying=!radioAudio.paused;radioAudio.src=radioSelect.value;radioAudio.load();if(wasPlaying)radioAudio.play().catch(()=>{})});
-const radioPanel=document.getElementById('radioAddPanel');
-document.getElementById('radioAddToggle').addEventListener('click',()=>radioPanel.classList.toggle('open'));
-document.getElementById('radioCancel').addEventListener('click',()=>radioPanel.classList.remove('open'));
-async function resolveRadioUrl(pageUrl){
- if(/\\.(mp3|aac|ogg|opus|m3u8|mp4)(\\?|$)/i.test(pageUrl))return pageUrl;
- try{
-  const response=await fetch(pageUrl,{mode:'cors'});
-  if(!response.ok)throw Error('La emisora no permite acceso externo');
-  const html=await response.text();
-  const doc=new DOMParser().parseFromString(html,'text/html');
-  const candidates=[...doc.querySelectorAll('audio[src],audio source[src],source[src],meta[property="og:audio"],meta[name="twitter:player:stream"]')].map(el=>el.getAttribute('src')||el.getAttribute('content')).filter(Boolean);
-  const found=candidates.map(x=>{try{return new URL(x,pageUrl).href}catch(e){return ''}}).find(x=>/\\.(mp3|aac|ogg|opus|m3u8|mp4)(\\?|$)/i.test(x)||/stream|radio|listen|live/i.test(x));
-  if(found)return found;
- }catch(e){throw Error('La página no permite detectar su audio automáticamente. Necesitamos el enlace directo de transmisión.')}
- throw Error('No se encontró una transmisión de audio compatible en esa página.');
-}
-document.getElementById('radioSave').addEventListener('click',async()=>{
- const name=document.getElementById('radioStationName').value.trim(),inputUrl=document.getElementById('radioStationUrl').value.trim(),saveButton=document.getElementById('radioSave');
- if(!name||!/^https?:\\/\\//i.test(inputUrl)){alert('Escribe el nombre y un enlace http(s) válido.');return}
- if(radioStations.some(x=>x.pageUrl===inputUrl||x.url===inputUrl)){alert('Esa estación ya está registrada.');return}
- saveButton.disabled=true;saveButton.textContent='Buscando transmisión…';
- try{
-  const streamUrl=await resolveRadioUrl(inputUrl);
-  radioStations.push({name,url:streamUrl,pageUrl:inputUrl});
-  try{localStorage.setItem(RADIO_KEY,JSON.stringify(radioStations.filter(x=>!defaultStations.some(d=>d.url===x.url))))}catch(e){}
-  renderRadioStations(streamUrl);radioAudio.src=streamUrl;radioAudio.load();radioPanel.classList.remove('open');
-  document.getElementById('radioStationName').value='';document.getElementById('radioStationUrl').value='';
- }catch(err){alert(err.message)}
- finally{saveButton.disabled=false;saveButton.textContent='Guardar'}
-});if(!name||!(url.startsWith('https://')||url.startsWith('http://'))){alert('Escribe el nombre y un enlace http(s) válido.');return}if(radioStations.some(x=>x.url===url)){alert('Esa estación ya está registrada.');return}radioStations.push({name,url});try{localStorage.setItem(RADIO_KEY,JSON.stringify(radioStations.filter(x=>!defaultStations.some(d=>d.url===x.url))))}catch(e){}renderRadioStations(url);radioAudio.src=url;radioAudio.load();radioPanel.classList.remove('open');document.getElementById('radioStationName').value='';document.getElementById('radioStationUrl').value=''});
 </script>
 </body>
 </html>
