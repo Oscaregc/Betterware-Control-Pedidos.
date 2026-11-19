@@ -116,10 +116,18 @@ main section.view-enter{animation:ogSectionEnter .34s cubic-bezier(.2,.7,.25,1) 
 #ogIntro #ogIntroVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#020711;opacity:1;visibility:visible}
 #ogIntro #ogIntroPoster{display:none!important}
 #ogIntro #ogIntroVideo::-webkit-media-controls,#ogIntro #ogIntroVideo::-webkit-media-controls-start-playback-button{display:none!important;-webkit-appearance:none}
+
+/* Minimal intro flash fix: poster remains until the MP4 playback is underway */
+#ogIntro{background:#020711!important;display:block!important}
+#ogIntroPoster{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#020711;opacity:1;transition:opacity .12s linear}
+#ogIntroVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#020711;opacity:0;visibility:hidden;border:0;outline:0}
+#ogIntro.video-playing #ogIntroVideo{opacity:1;visibility:visible}
+#ogIntro.video-playing #ogIntroPoster{opacity:0}
+#ogIntroVideo::-webkit-media-controls,#ogIntroVideo::-webkit-media-controls-start-playback-button{display:none!important;-webkit-appearance:none}
 </style>
 </head>
 <body>
-<!-- Intro video temporarily disabled while diagnosing Android WebView playback -->
+<div id="ogIntro" role="status" aria-label="Presentación OG Digital Solutions"><img id="ogIntroPoster" src="assets/og-digital-solutions.png" alt="" aria-hidden="true"><video id="ogIntroVideo" autoplay playsinline webkit-playsinline preload="auto"><source src="assets/og-intro.mp4.mp4" type="video/mp4"></video></div>
 
 <header><div class="row"><button id="menuOpen" class="menu-trigger" aria-label="Abrir menú">☰ Menú</button><div class="brand">BETTERWARE <small>CONTROL DE PEDIDOS</small></div></div><div class="row"><div id="headerDate" style="font-size:12px;opacity:.9"></div></div></header>
 <main>
@@ -356,7 +364,19 @@ document.getElementById('menuClose').addEventListener('click',closeDrawer);
 backdrop.addEventListener('click',closeDrawer);
 document.querySelectorAll('.drawer-nav button').forEach(b=>b.addEventListener('click',event=>{event.preventDefault();const section=b.dataset.view;try{showView(section)}finally{closeDrawer()}}));
 
-// Intro video disabled temporarily to ensure app opens normally.
+const ogIntro=document.getElementById('ogIntro');
+const ogIntroVideo=document.getElementById('ogIntroVideo');
+if(ogIntro&&ogIntroVideo){
+ let introDone=false;
+ const finishIntro=()=>{if(introDone)return;introDone=true;ogIntro.classList.add('is-leaving');setTimeout(()=>ogIntro.remove(),650)};
+ ogIntroVideo.addEventListener('playing',()=>ogIntro.classList.add('video-playing'),{once:true});
+ ogIntroVideo.addEventListener('ended',finishIntro,{once:true});
+ ogIntroVideo.addEventListener('error',finishIntro,{once:true});
+ ogIntroVideo.muted=false;ogIntroVideo.volume=1;
+ const start=ogIntroVideo.play();
+ if(start&&typeof start.catch==='function')start.catch(()=>finishIntro());
+ setTimeout(finishIntro,12000);
+}
 
 </script>
 </body>
