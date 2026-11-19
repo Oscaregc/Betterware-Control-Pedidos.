@@ -372,7 +372,7 @@ if(ogIntro&&ogIntroVideo){
  ogIntroVideo.addEventListener('error',finishIntro,{once:true});
  ogIntroVideo.addEventListener('loadedmetadata',startIntro,{once:true});
  ogIntroVideo.addEventListener('canplay',startIntro,{once:true});
- setTimeout(()=>{if(!introDone&&ogIntroVideo.currentTime<0.1)finishIntro()},9000);
+ setTimeout(()=>{if(!introDone&&(!soundStarted||ogIntroVideo.currentTime<0.1))finishIntro()},4000);
 }</script>
 </body>
 </html>
