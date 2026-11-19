@@ -374,7 +374,7 @@ document.querySelectorAll('.drawer-nav button').forEach(b=>b.addEventListener('c
 const ogIntro=document.getElementById('ogIntro');
 const ogIntroVideo=document.getElementById('ogIntroVideo');
 window.ogNeedsSetup=false;
-try{window.ogNeedsSetup=!localStorage.getItem('betterware_control_pedidos_setup_done')&&!localStorage.getItem(PROFILE_KEY)}catch(e){}
+try{window.ogNeedsSetup=!localStorage.getItem('betterware_control_pedidos_setup_done')}catch(e){}
 if(ogIntro&&ogIntroVideo){
  let introDone=false;
  const finishIntro=()=>{if(introDone)return;introDone=true;ogIntro.classList.add('is-leaving');setTimeout(()=>{ogIntro.remove();if(window.ogNeedsSetup)showView('perfil')},650)};
@@ -383,7 +383,6 @@ if(ogIntro&&ogIntroVideo){
  ogIntroVideo.addEventListener('error',finishIntro,{once:true});
  ogIntroVideo.muted=false;ogIntroVideo.volume=1;
  ogIntroVideo.controls=false;
- ogIntroVideo.setAttribute('controls','false');
  ogIntroVideo.setAttribute('disablepictureinpicture','');
  ogIntroVideo.setAttribute('controlslist','nodownload noplaybackrate nofullscreen');
  const start=ogIntroVideo.play();
