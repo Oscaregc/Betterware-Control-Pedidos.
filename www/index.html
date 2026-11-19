@@ -132,8 +132,8 @@ main section.view-enter{animation:ogSectionEnter .34s cubic-bezier(.2,.7,.25,1) 
 <header><div class="row"><button id="menuOpen" class="menu-trigger" aria-label="Abrir menú">☰ Menú</button><div class="brand">BETTERWARE <small>CONTROL DE PEDIDOS</small></div></div><div class="row"><div id="headerDate" style="font-size:12px;opacity:.9"></div></div></header>
 <main>
 <div id="drawerBackdrop" class="drawer-backdrop"></div><aside id="appDrawer" class="app-drawer" aria-label="Menú principal"><div class="drawer-head"><div class="drawer-brand">BETTERWARE<br><small>CONTROL DE PEDIDOS</small></div><button id="menuClose" aria-label="Cerrar menú">✕</button></div><nav class="drawer-nav">
-<button data-view="perfil"><span>›</span>⚙️ Perfiles y configuración</button>
-<button class="nav-active" data-view="pedido"><span>›</span>＋ Nuevo pedido</button>
+<button class="nav-active" data-view="perfil"><span>›</span>⚙️ Perfiles y configuración</button>
+<button data-view="pedido"><span>›</span>＋ Nuevo pedido</button>
 <button data-view="clientes"><span>›</span>Clientes</button>
 <button data-view="pedidos"><span>›</span>Pedidos guardados</button>
 <button data-view="cierre"><span>›</span>Finalizar / revisar</button>
@@ -141,7 +141,7 @@ main section.view-enter{animation:ogSectionEnter .34s cubic-bezier(.2,.7,.25,1) 
 <button data-view="apariencia"><span>›</span>☀️ / 🌙 Apariencia</button>
 </nav><div class="drawer-foot">Creado por <strong>Óscar Granados</strong></div></aside>
 
-<section id="view-pedido">
+<section id="view-pedido" class="hidden">
 <div class="panel">
 <h1 id="orderHeading">Nuevo pedido</h1><p class="sub">Selecciona al cliente y agrega los productos solicitados.</p>
 <div class="grid">
@@ -212,7 +212,7 @@ main section.view-enter{animation:ogSectionEnter .34s cubic-bezier(.2,.7,.25,1) 
 </div>
 </section>
 
-<section id="view-perfil" class="hidden">
+<section id="view-perfil">
 <div class="panel">
 <h1>Perfil de usuario</h1><p class="sub">Selecciona cómo utilizas la aplicación. Las funciones y los tipos de clientes se ajustarán a tu perfil.</p>
 <div class="field"><label for="profileSelect">Tipo de perfil</label><select id="profileSelect"><option value="asociado">Asociado</option><option value="distribuidor">Distribuidor</option></select></div>
@@ -364,6 +364,7 @@ document.getElementById('menuClose').addEventListener('click',closeDrawer);
 backdrop.addEventListener('click',closeDrawer);
 document.querySelectorAll('.drawer-nav button').forEach(b=>b.addEventListener('click',event=>{event.preventDefault();const section=b.dataset.view;try{showView(section)}finally{closeDrawer()}}));
 
+syncProfileUI();
 const ogIntro=document.getElementById('ogIntro');
 const ogIntroVideo=document.getElementById('ogIntroVideo');
 const PROFILE_SETUP_V3='og_digital_profile_setup_v3';
