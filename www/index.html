@@ -131,10 +131,15 @@ main section.view-enter{animation:ogSectionEnter .34s cubic-bezier(.2,.7,.25,1) 
 #ogIntro video::-webkit-media-controls-panel{display:none!important}
 #ogIntro video::-webkit-media-controls-overlay-play-button{display:none!important}
 #ogIntro video::-webkit-media-controls-start-playback-button{display:none!important}
+/* Keep Android's native video UI completely out of view until playback is active */
+#ogIntroVideo{display:block!important;opacity:0!important;visibility:hidden!important}
+#ogIntro.video-playing #ogIntroVideo{opacity:1!important;visibility:visible!important}
+#ogIntro.video-playing #ogIntroPoster{opacity:0!important}
+#ogIntro video[controls],#ogIntro video::-webkit-media-controls{display:none!important}
 </style>
 </head>
 <body>
-<div id="ogIntro" role="status" aria-label="Presentación OG Digital Solutions"><img id="ogIntroPoster" src="assets/og-digital-solutions.png" alt="" aria-hidden="true"><video id="ogIntroVideo" autoplay playsinline webkit-playsinline preload="auto"><source src="assets/og-intro.mp4.mp4" type="video/mp4"></video></div>
+<div id="ogIntro" role="status" aria-label="Presentación OG Digital Solutions"><img id="ogIntroPoster" src="assets/og-digital-solutions.png" alt="" aria-hidden="true"><video id="ogIntroVideo" playsinline webkit-playsinline preload="auto" controls="false"><source src="assets/og-intro.mp4.mp4" type="video/mp4"></video></div>
 
 <header><div class="row"><button id="menuOpen" class="menu-trigger" aria-label="Abrir menú">☰ Menú</button><div class="brand">BETTERWARE <small>CONTROL DE PEDIDOS</small></div></div><div class="row"><div id="headerDate" style="font-size:12px;opacity:.9"></div></div></header>
 <main>
@@ -373,21 +378,17 @@ document.querySelectorAll('.drawer-nav button').forEach(b=>b.addEventListener('c
 
 const ogIntro=document.getElementById('ogIntro');
 const ogIntroVideo=document.getElementById('ogIntroVideo');
-window.ogNeedsSetup=false;
-try{window.ogNeedsSetup=!localStorage.getItem('betterware_control_pedidos_setup_done')}catch(e){}
 if(ogIntro&&ogIntroVideo){
- let introDone=false;
- const finishIntro=()=>{if(introDone)return;introDone=true;ogIntro.classList.add('is-leaving');setTimeout(()=>{ogIntro.remove();if(window.ogNeedsSetup)showView('perfil')},650)};
+ let introDone=false,playRequested=false;
+ const finishIntro=()=>{if(introDone)return;introDone=true;ogIntro.classList.add('is-leaving');setTimeout(()=>{ogIntro.remove();showView('perfil')},650)};
+ const startVideo=()=>{if(playRequested)return;playRequested=true;ogIntroVideo.controls=false;ogIntroVideo.removeAttribute('controls');ogIntroVideo.muted=false;ogIntroVideo.volume=1;const p=ogIntroVideo.play();if(p&&p.catch)p.catch(()=>finishIntro())};
  ogIntroVideo.addEventListener('playing',()=>ogIntro.classList.add('video-playing'),{once:true});
+ ogIntroVideo.addEventListener('loadeddata',startVideo,{once:true});
  ogIntroVideo.addEventListener('ended',finishIntro,{once:true});
  ogIntroVideo.addEventListener('error',finishIntro,{once:true});
- ogIntroVideo.muted=false;ogIntroVideo.volume=1;
- ogIntroVideo.controls=false;
- ogIntroVideo.setAttribute('disablepictureinpicture','');
- ogIntroVideo.setAttribute('controlslist','nodownload noplaybackrate nofullscreen');
- const start=ogIntroVideo.play();
- if(start&&typeof start.catch==='function')start.catch(()=>finishIntro());
- setTimeout(finishIntro,12000);
+ // Start only after the first decoded frame is ready; poster remains until real playback.
+ if(ogIntroVideo.readyState>=2)startVideo();
+ setTimeout(finishIntro,15000);
 }
 
 </script>
