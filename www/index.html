@@ -110,12 +110,20 @@ main section.view-enter{animation:ogSectionEnter .34s cubic-bezier(.2,.7,.25,1) 
 @media(orientation:landscape){#ogIntro #ogIntroVideo{width:100%!important;height:100%!important;object-fit:contain!important}}
 @media(prefers-reduced-motion:reduce){#ogIntro{transition:none!important}}
 
-/* Splash playback: no native overlay, no hidden video layer */
-#ogIntro{position:fixed!important;inset:0!important;z-index:3000!important;display:block!important;padding:0!important;overflow:hidden!important;background:#020711!important}
-#ogIntro.is-leaving{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
-#ogIntroPoster{display:none!important}
-#ogIntroVideo{display:block!important;position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:contain!important;background:#020711!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important}
-#ogIntroVideo::-webkit-media-controls,#ogIntroVideo::-webkit-media-controls-enclosure,#ogIntroVideo::-webkit-media-controls-panel,#ogIntroVideo::-webkit-media-controls-overlay-play-button,#ogIntroVideo::-webkit-media-controls-start-playback-button{display:none!important;visibility:hidden!important;opacity:0!important;-webkit-appearance:none!important}
+/* Splash screen: evitar el flash blanco / icono play */
+#ogIntro{background:#020711!important;display:block!important}
+#ogIntro #ogIntroPoster{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:1;transition:opacity .15s ease;background:#020711}
+#ogIntro #ogIntroVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#020711;opacity:1;visibility:visible}
+#ogIntro #ogIntroPoster{display:none!important}
+#ogIntro #ogIntroVideo::-webkit-media-controls,#ogIntro #ogIntroVideo::-webkit-media-controls-start-playback-button{display:none!important;-webkit-appearance:none}
+
+/* Splash: show poster only during load; reveal video only after playback starts */
+#ogIntro{background:#020711!important;display:block!important}
+#ogIntroPoster{display:block!important;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#020711;opacity:1;transition:opacity .12s linear}
+#ogIntroVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#020711;border:0;outline:0;opacity:0;visibility:hidden;pointer-events:none}
+#ogIntro.video-playing #ogIntroVideo{opacity:1;visibility:visible}
+#ogIntro.video-playing #ogIntroPoster{opacity:0;visibility:hidden}
+#ogIntroVideo::-webkit-media-controls,#ogIntroVideo::-webkit-media-controls-enclosure,#ogIntroVideo::-webkit-media-controls-panel,#ogIntroVideo::-webkit-media-controls-overlay-play-button,#ogIntroVideo::-webkit-media-controls-start-playback-button{display:none!important;visibility:hidden!important;opacity:0!important;-webkit-appearance:none}
 </style>
 </head>
 <body>
@@ -359,20 +367,22 @@ document.querySelectorAll('.drawer-nav button').forEach(b=>b.addEventListener('c
 syncProfileUI();
 const ogIntro=document.getElementById('ogIntro');
 const ogIntroVideo=document.getElementById('ogIntroVideo');
+const PROFILE_SETUP_V3='og_digital_profile_setup_v3';
+let ogFirstSetup=false;
+try{ogFirstSetup=!localStorage.getItem(PROFILE_SETUP_V3)}catch(e){ogFirstSetup=true}
 if(ogIntro&&ogIntroVideo){
  let introDone=false;
- let soundStarted=false;
- const finishIntro=()=>{if(introDone)return;introDone=true;ogIntro.classList.add('is-leaving');setTimeout(()=>{ogIntro.remove();showView('perfil')},450)};
- const startIntro=()=>{try{const p=ogIntroVideo.play();if(p&&p.catch)p.catch(()=>{finishIntro()})}catch(e){finishIntro()}};
- ogIntroVideo.controls=false;ogIntroVideo.removeAttribute('controls');
- ogIntroVideo.setAttribute('playsinline','');ogIntroVideo.setAttribute('webkit-playsinline','');ogIntroVideo.setAttribute('autoplay','');
- ogIntroVideo.muted=true;ogIntroVideo.volume=1;
- ogIntroVideo.addEventListener('playing',()=>{if(soundStarted)return;soundStarted=true;setTimeout(()=>{try{ogIntroVideo.muted=false}catch(e){}},350)},{once:true});
+ const finishIntro=()=>{if(introDone)return;introDone=true;ogIntro.classList.add('is-leaving');setTimeout(()=>{ogIntro.remove();showView('perfil')},500)};
+ ogIntroVideo.controls=false;ogIntroVideo.removeAttribute('controls');ogIntroVideo.setAttribute('playsinline','');ogIntroVideo.setAttribute('webkit-playsinline','');
+ ogIntroVideo.muted=true;
+ ogIntroVideo.addEventListener('playing',()=>{ogIntro.classList.add('video-playing');ogIntroVideo.muted=false;ogIntroVideo.volume=1},{once:true});
  ogIntroVideo.addEventListener('ended',finishIntro,{once:true});
  ogIntroVideo.addEventListener('error',finishIntro,{once:true});
- ogIntroVideo.addEventListener('loadedmetadata',startIntro,{once:true});
- ogIntroVideo.addEventListener('canplay',startIntro,{once:true});
- setTimeout(()=>{if(!introDone&&(!soundStarted||ogIntroVideo.currentTime<0.1))finishIntro()},4000);
-}</script>
+ ogIntroVideo.addEventListener('loadeddata',()=>{const p=ogIntroVideo.play();if(p&&p.catch)p.catch(()=>finishIntro())},{once:true});
+ if(ogIntroVideo.readyState>=2){const p=ogIntroVideo.play();if(p&&p.catch)p.catch(()=>finishIntro())}
+ setTimeout(finishIntro,15000);
+}
+
+</script>
 </body>
 </html>
