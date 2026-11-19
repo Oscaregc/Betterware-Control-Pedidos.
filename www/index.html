@@ -117,25 +117,13 @@ main section.view-enter{animation:ogSectionEnter .34s cubic-bezier(.2,.7,.25,1) 
 #ogIntro #ogIntroPoster{display:none!important}
 #ogIntro #ogIntroVideo::-webkit-media-controls,#ogIntro #ogIntroVideo::-webkit-media-controls-start-playback-button{display:none!important;-webkit-appearance:none}
 
-/* Minimal intro flash fix: poster remains until the MP4 playback is underway */
+/* Splash: show poster only during load; reveal video only after playback starts */
 #ogIntro{background:#020711!important;display:block!important}
-#ogIntroPoster{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#020711;opacity:1;transition:opacity .12s linear}
-#ogIntroVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#020711;opacity:0;visibility:hidden;border:0;outline:0}
+#ogIntroPoster{display:block!important;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#020711;opacity:1;transition:opacity .12s linear}
+#ogIntroVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#020711;border:0;outline:0;opacity:0;visibility:hidden;pointer-events:none}
 #ogIntro.video-playing #ogIntroVideo{opacity:1;visibility:visible}
-#ogIntro.video-playing #ogIntroPoster{opacity:0}
-#ogIntroVideo::-webkit-media-controls,#ogIntroVideo::-webkit-media-controls-start-playback-button{display:none!important;-webkit-appearance:none}
-/* Android WebView: suppress native playback controls and hide player before playing */
-#ogIntro video{pointer-events:none!important}
-#ogIntro video::-webkit-media-controls{display:none!important;visibility:hidden!important;opacity:0!important}
-#ogIntro video::-webkit-media-controls-enclosure{display:none!important}
-#ogIntro video::-webkit-media-controls-panel{display:none!important}
-#ogIntro video::-webkit-media-controls-overlay-play-button{display:none!important}
-#ogIntro video::-webkit-media-controls-start-playback-button{display:none!important}
-/* Keep Android's native video UI completely out of view until playback is active */
-#ogIntroVideo{display:block!important;opacity:0!important;visibility:hidden!important}
-#ogIntro.video-playing #ogIntroVideo{opacity:1!important;visibility:visible!important}
-#ogIntro.video-playing #ogIntroPoster{opacity:0!important}
-#ogIntro video[controls],#ogIntro video::-webkit-media-controls{display:none!important}
+#ogIntro.video-playing #ogIntroPoster{opacity:0;visibility:hidden}
+#ogIntroVideo::-webkit-media-controls,#ogIntroVideo::-webkit-media-controls-enclosure,#ogIntroVideo::-webkit-media-controls-panel,#ogIntroVideo::-webkit-media-controls-overlay-play-button,#ogIntroVideo::-webkit-media-controls-start-playback-button{display:none!important;visibility:hidden!important;opacity:0!important;-webkit-appearance:none}
 </style>
 </head>
 <body>
@@ -336,7 +324,7 @@ $('manualTypeField').classList.toggle('hidden',userProfile==='asociado');
 if(userProfile==='asociado'){$('clientType').value='Cliente final';$('manualType').value='Cliente final';$('associateField').classList.add('hidden');$('manualAssociateField').classList.add('hidden')}
 }
 $('profileSelect').addEventListener('change',()=>{userProfile=$('profileSelect').value;syncProfileUI()});
-$('saveProfile').addEventListener('click',()=>{userProfile=$('profileSelect').value;uplinePhone=$('uplinePhone').value.replace(/[^0-9]/g,'');associateName=$('associateName').value.trim();distributorName=$('distributorName').value.trim();if(userProfile==='asociado'&&(!associateName||!distributorName)){alert('Captura el nombre del asociado y el nombre de su distribuidor.');return}try{localStorage.setItem(PROFILE_KEY,userProfile);localStorage.setItem(UPLINE_KEY,uplinePhone);localStorage.setItem(ASSOCIATE_NAME_KEY,associateName);localStorage.setItem(DISTRIBUTOR_NAME_KEY,distributorName)}catch(e){}syncProfileUI();refreshClientSelect();renderClients();alert('Perfil guardado en este dispositivo.');try{localStorage.setItem('betterware_control_pedidos_setup_done','1')}catch(e){};if(window.ogNeedsSetup){window.ogNeedsSetup=false;showView('pedido')}});
+$('saveProfile').addEventListener('click',()=>{userProfile=$('profileSelect').value;uplinePhone=$('uplinePhone').value.replace(/[^0-9]/g,'');associateName=$('associateName').value.trim();distributorName=$('distributorName').value.trim();if(userProfile==='asociado'&&(!associateName||!distributorName)){alert('Captura el nombre del asociado y el nombre de su distribuidor.');return}try{localStorage.setItem(PROFILE_KEY,userProfile);localStorage.setItem(UPLINE_KEY,uplinePhone);localStorage.setItem(ASSOCIATE_NAME_KEY,associateName);localStorage.setItem(DISTRIBUTOR_NAME_KEY,distributorName)}catch(e){}syncProfileUI();refreshClientSelect();renderClients();alert('Perfil guardado en este dispositivo.');try{localStorage.setItem('betterware_control_pedidos_setup_done','1');localStorage.setItem('og_digital_profile_setup_v2','1')}catch(e){};if(window.ogNeedsSetup){window.ogNeedsSetup=false;showView('pedido')}});
 function getWeekOrders(){const week=$('closeWeek').value.trim();if(!week){alert('Escribe o selecciona la semana que deseas finalizar.');return []}return db.orders.filter(o=>String(o.week)===week).sort((a,b)=>(a.clientName||'').localeCompare(b.clientName||'','es'))}
 function weeklyMessage(orders,mode){const total=orders.reduce((n,o)=>n+(Number(o.total)||0),0);const lines=['BETTERWARE · PEDIDO SEMANAL COMPLETO','Semana: '+$('closeWeek').value.trim(),userProfile==='asociado'?'Asociado: '+associateName:'Distribuidor: '+(distributorName||'—'),userProfile==='asociado'?'Distribuidor: '+distributorName:'','Acción: '+mode,''];orders.forEach((o,i)=>{lines.push((i+1)+'. '+o.clientName+' ('+(o.clientType||'Cliente final')+(o.associate?' · Asociado #'+o.associate:'')+')');(o.products||[]).forEach(p=>lines.push('   - '+(p.code?p.code+' · ':'')+p.name+' | '+p.qty+' x '+money(p.price)+' = '+money(p.total)));lines.push('   SUBTOTAL: '+money(o.total),'')});lines.push('TOTAL GENERAL: '+money(total),'','Enviado desde Betterware Control de Pedidos.');return lines.join('\n')}
 function openWeeklyWhatsApp(mode){const orders=getWeekOrders();if(!orders.length){alert('No hay pedidos registrados para esa semana.');return}const phone=(uplinePhone||'').replace(/[^0-9]/g,'');if(!phone){alert('Primero registra el WhatsApp de tu distribuidor en Perfiles y configuración.');showView('perfil');return}const url='https://wa.me/'+phone+'?text='+encodeURIComponent(weeklyMessage(orders,mode));window.open(url,'_blank','noopener');return orders}
@@ -378,16 +366,19 @@ document.querySelectorAll('.drawer-nav button').forEach(b=>b.addEventListener('c
 
 const ogIntro=document.getElementById('ogIntro');
 const ogIntroVideo=document.getElementById('ogIntroVideo');
+const PROFILE_SETUP_V2='og_digital_profile_setup_v2';
+let ogFirstSetup=false;
+try{ogFirstSetup=!localStorage.getItem(PROFILE_SETUP_V2)}catch(e){ogFirstSetup=true}
 if(ogIntro&&ogIntroVideo){
- let introDone=false,playRequested=false;
- const finishIntro=()=>{if(introDone)return;introDone=true;ogIntro.classList.add('is-leaving');setTimeout(()=>{ogIntro.remove();showView('perfil')},650)};
- const startVideo=()=>{if(playRequested)return;playRequested=true;ogIntroVideo.controls=false;ogIntroVideo.removeAttribute('controls');ogIntroVideo.muted=false;ogIntroVideo.volume=1;const p=ogIntroVideo.play();if(p&&p.catch)p.catch(()=>finishIntro())};
- ogIntroVideo.addEventListener('playing',()=>ogIntro.classList.add('video-playing'),{once:true});
- ogIntroVideo.addEventListener('loadeddata',startVideo,{once:true});
+ let introDone=false;
+ const finishIntro=()=>{if(introDone)return;introDone=true;ogIntro.classList.add('is-leaving');setTimeout(()=>{ogIntro.remove();showView(ogFirstSetup?'perfil':'pedido')},500)};
+ ogIntroVideo.controls=false;ogIntroVideo.removeAttribute('controls');ogIntroVideo.setAttribute('playsinline','');ogIntroVideo.setAttribute('webkit-playsinline','');
+ ogIntroVideo.muted=true;
+ ogIntroVideo.addEventListener('playing',()=>{ogIntro.classList.add('video-playing');ogIntroVideo.muted=false;ogIntroVideo.volume=1},{once:true});
  ogIntroVideo.addEventListener('ended',finishIntro,{once:true});
  ogIntroVideo.addEventListener('error',finishIntro,{once:true});
- // Start only after the first decoded frame is ready; poster remains until real playback.
- if(ogIntroVideo.readyState>=2)startVideo();
+ ogIntroVideo.addEventListener('loadeddata',()=>{const p=ogIntroVideo.play();if(p&&p.catch)p.catch(()=>finishIntro())},{once:true});
+ if(ogIntroVideo.readyState>=2){const p=ogIntroVideo.play();if(p&&p.catch)p.catch(()=>finishIntro())}
  setTimeout(finishIntro,15000);
 }
 
