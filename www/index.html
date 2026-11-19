@@ -371,7 +371,7 @@ let ogFirstSetup=false;
 try{ogFirstSetup=!localStorage.getItem(PROFILE_SETUP_V3)}catch(e){ogFirstSetup=true}
 if(ogIntro&&ogIntroVideo){
  let introDone=false;
- const finishIntro=()=>{if(introDone)return;introDone=true;ogIntro.classList.add('is-leaving');setTimeout(()=>{ogIntro.remove();showView(ogFirstSetup?'perfil':'pedido')},500)};
+ const finishIntro=()=>{if(introDone)return;introDone=true;ogIntro.classList.add('is-leaving');setTimeout(()=>{ogIntro.remove();showView('perfil')},500)};
  ogIntroVideo.controls=false;ogIntroVideo.removeAttribute('controls');ogIntroVideo.setAttribute('playsinline','');ogIntroVideo.setAttribute('webkit-playsinline','');
  ogIntroVideo.muted=true;
  ogIntroVideo.addEventListener('playing',()=>{ogIntro.classList.add('video-playing');ogIntroVideo.muted=false;ogIntroVideo.volume=1},{once:true});
