@@ -119,7 +119,7 @@ main section.view-enter{animation:ogSectionEnter .34s cubic-bezier(.2,.7,.25,1) 
 </style>
 </head>
 <body>
-<div id="ogIntro" role="status" aria-label="Presentación OG Digital Solutions"><img id="ogIntroPoster" src="assets/og-digital-solutions.png" alt="" aria-hidden="true"><video id="ogIntroVideo" playsinline webkit-playsinline preload="auto"><source src="assets/og-intro.mp4.mp4" type="video/mp4"></video></div>
+<!-- Intro video temporarily disabled while diagnosing Android WebView playback -->
 
 <header><div class="row"><button id="menuOpen" class="menu-trigger" aria-label="Abrir menú">☰ Menú</button><div class="brand">BETTERWARE <small>CONTROL DE PEDIDOS</small></div></div><div class="row"><div id="headerDate" style="font-size:12px;opacity:.9"></div></div></header>
 <main>
@@ -356,21 +356,8 @@ document.getElementById('menuClose').addEventListener('click',closeDrawer);
 backdrop.addEventListener('click',closeDrawer);
 document.querySelectorAll('.drawer-nav button').forEach(b=>b.addEventListener('click',event=>{event.preventDefault();const section=b.dataset.view;try{showView(section)}finally{closeDrawer()}}));
 
-const ogIntro=document.getElementById('ogIntro');
-const ogIntroVideo=document.getElementById('ogIntroVideo');
-window.ogNeedsSetup=false;
-try{window.ogNeedsSetup=!localStorage.getItem('betterware_control_pedidos_setup_done')&&!localStorage.getItem(PROFILE_KEY)}catch(e){}
-if(ogIntro&&ogIntroVideo){
- let ogIntroClosed=false;
- const closeOgIntro=()=>{if(ogIntroClosed)return;ogIntroClosed=true;ogIntro.classList.add('is-leaving');window.setTimeout(()=>{ogIntro.remove();if(window.ogNeedsSetup)showView('perfil')},650)};
- ogIntroVideo.addEventListener('playing',()=>ogIntro.classList.add('video-ready'),{once:true});
- ogIntroVideo.addEventListener('ended',closeOgIntro,{once:true});
- ogIntroVideo.addEventListener('error',closeOgIntro,{once:true});
- ogIntroVideo.muted=false;ogIntroVideo.volume=1;
- const playAttempt=ogIntroVideo.play();
- if(playAttempt&&typeof playAttempt.catch==='function')playAttempt.catch(()=>closeOgIntro());
- window.setTimeout(closeOgIntro,12000);
-}
+// Intro video disabled temporarily to ensure app opens normally.
+
 </script>
 </body>
 </html>
