@@ -124,6 +124,13 @@ main section.view-enter{animation:ogSectionEnter .34s cubic-bezier(.2,.7,.25,1) 
 #ogIntro.video-playing #ogIntroVideo{opacity:1;visibility:visible}
 #ogIntro.video-playing #ogIntroPoster{opacity:0}
 #ogIntroVideo::-webkit-media-controls,#ogIntroVideo::-webkit-media-controls-start-playback-button{display:none!important;-webkit-appearance:none}
+/* Android WebView: suppress native playback controls and hide player before playing */
+#ogIntro video{pointer-events:none!important}
+#ogIntro video::-webkit-media-controls{display:none!important;visibility:hidden!important;opacity:0!important}
+#ogIntro video::-webkit-media-controls-enclosure{display:none!important}
+#ogIntro video::-webkit-media-controls-panel{display:none!important}
+#ogIntro video::-webkit-media-controls-overlay-play-button{display:none!important}
+#ogIntro video::-webkit-media-controls-start-playback-button{display:none!important}
 </style>
 </head>
 <body>
@@ -366,13 +373,19 @@ document.querySelectorAll('.drawer-nav button').forEach(b=>b.addEventListener('c
 
 const ogIntro=document.getElementById('ogIntro');
 const ogIntroVideo=document.getElementById('ogIntroVideo');
+window.ogNeedsSetup=false;
+try{window.ogNeedsSetup=!localStorage.getItem('betterware_control_pedidos_setup_done')&&!localStorage.getItem(PROFILE_KEY)}catch(e){}
 if(ogIntro&&ogIntroVideo){
  let introDone=false;
- const finishIntro=()=>{if(introDone)return;introDone=true;ogIntro.classList.add('is-leaving');setTimeout(()=>ogIntro.remove(),650)};
+ const finishIntro=()=>{if(introDone)return;introDone=true;ogIntro.classList.add('is-leaving');setTimeout(()=>{ogIntro.remove();if(window.ogNeedsSetup)showView('perfil')},650)};
  ogIntroVideo.addEventListener('playing',()=>ogIntro.classList.add('video-playing'),{once:true});
  ogIntroVideo.addEventListener('ended',finishIntro,{once:true});
  ogIntroVideo.addEventListener('error',finishIntro,{once:true});
  ogIntroVideo.muted=false;ogIntroVideo.volume=1;
+ ogIntroVideo.controls=false;
+ ogIntroVideo.setAttribute('controls','false');
+ ogIntroVideo.setAttribute('disablepictureinpicture','');
+ ogIntroVideo.setAttribute('controlslist','nodownload noplaybackrate nofullscreen');
  const start=ogIntroVideo.play();
  if(start&&typeof start.catch==='function')start.catch(()=>finishIntro());
  setTimeout(finishIntro,12000);
