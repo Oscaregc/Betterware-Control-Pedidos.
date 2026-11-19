@@ -109,20 +109,28 @@ main section.view-enter{animation:ogSectionEnter .34s cubic-bezier(.2,.7,.25,1) 
 #ogIntro #ogIntroVideo{display:block!important;width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;background:#020711!important}
 @media(orientation:landscape){#ogIntro #ogIntroVideo{width:100%!important;height:100%!important;object-fit:contain!important}}
 @media(prefers-reduced-motion:reduce){#ogIntro{transition:none!important}}
+
+/* Splash screen: evitar el flash blanco / icono play */
+#ogIntro{background:#020711!important;display:block!important}
+#ogIntro #ogIntroPoster{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:1;transition:opacity .15s ease;background:#020711}
+#ogIntro #ogIntroVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#020711;opacity:0;visibility:hidden;transition:opacity .12s ease}
+#ogIntro.video-ready #ogIntroVideo{opacity:1;visibility:visible}
+#ogIntro.video-ready #ogIntroPoster{opacity:0}
+#ogIntro #ogIntroVideo::-webkit-media-controls,#ogIntro #ogIntroVideo::-webkit-media-controls-start-playback-button{display:none!important;-webkit-appearance:none}
 </style>
 </head>
 <body>
-<div id="ogIntro" role="status" aria-label="Presentación OG Digital Solutions"><video id="ogIntroVideo" autoplay playsinline webkit-playsinline preload="auto"><source src="assets/og-intro.mp4.mp4" type="video/mp4"></video></div>
+<div id="ogIntro" role="status" aria-label="Presentación OG Digital Solutions"><img id="ogIntroPoster" src="assets/og-digital-solutions.png" alt="" aria-hidden="true"><video id="ogIntroVideo" playsinline webkit-playsinline preload="auto"><source src="assets/og-intro.mp4.mp4" type="video/mp4"></video></div>
 
 <header><div class="row"><button id="menuOpen" class="menu-trigger" aria-label="Abrir menú">☰ Menú</button><div class="brand">BETTERWARE <small>CONTROL DE PEDIDOS</small></div></div><div class="row"><div id="headerDate" style="font-size:12px;opacity:.9"></div></div></header>
 <main>
 <div id="drawerBackdrop" class="drawer-backdrop"></div><aside id="appDrawer" class="app-drawer" aria-label="Menú principal"><div class="drawer-head"><div class="drawer-brand">BETTERWARE<br><small>CONTROL DE PEDIDOS</small></div><button id="menuClose" aria-label="Cerrar menú">✕</button></div><nav class="drawer-nav">
+<button data-view="perfil"><span>›</span>⚙️ Perfiles y configuración</button>
 <button class="nav-active" data-view="pedido"><span>›</span>＋ Nuevo pedido</button>
 <button data-view="clientes"><span>›</span>Clientes</button>
 <button data-view="pedidos"><span>›</span>Pedidos guardados</button>
 <button data-view="cierre"><span>›</span>Finalizar / revisar</button>
 <button data-view="respaldo"><span>›</span>Respaldo</button>
-<button data-view="perfil"><span>›</span>Perfiles y configuración</button>
 <button data-view="apariencia"><span>›</span>☀️ / 🌙 Apariencia</button>
 </nav><div class="drawer-foot">Creado por <strong>Óscar Granados</strong></div></aside>
 
@@ -309,7 +317,7 @@ $('manualTypeField').classList.toggle('hidden',userProfile==='asociado');
 if(userProfile==='asociado'){$('clientType').value='Cliente final';$('manualType').value='Cliente final';$('associateField').classList.add('hidden');$('manualAssociateField').classList.add('hidden')}
 }
 $('profileSelect').addEventListener('change',()=>{userProfile=$('profileSelect').value;syncProfileUI()});
-$('saveProfile').addEventListener('click',()=>{userProfile=$('profileSelect').value;uplinePhone=$('uplinePhone').value.replace(/[^0-9]/g,'');associateName=$('associateName').value.trim();distributorName=$('distributorName').value.trim();if(userProfile==='asociado'&&(!associateName||!distributorName)){alert('Captura el nombre del asociado y el nombre de su distribuidor.');return}try{localStorage.setItem(PROFILE_KEY,userProfile);localStorage.setItem(UPLINE_KEY,uplinePhone);localStorage.setItem(ASSOCIATE_NAME_KEY,associateName);localStorage.setItem(DISTRIBUTOR_NAME_KEY,distributorName)}catch(e){}syncProfileUI();refreshClientSelect();renderClients();alert('Perfil guardado en este dispositivo.')});
+$('saveProfile').addEventListener('click',()=>{userProfile=$('profileSelect').value;uplinePhone=$('uplinePhone').value.replace(/[^0-9]/g,'');associateName=$('associateName').value.trim();distributorName=$('distributorName').value.trim();if(userProfile==='asociado'&&(!associateName||!distributorName)){alert('Captura el nombre del asociado y el nombre de su distribuidor.');return}try{localStorage.setItem(PROFILE_KEY,userProfile);localStorage.setItem(UPLINE_KEY,uplinePhone);localStorage.setItem(ASSOCIATE_NAME_KEY,associateName);localStorage.setItem(DISTRIBUTOR_NAME_KEY,distributorName)}catch(e){}syncProfileUI();refreshClientSelect();renderClients();alert('Perfil guardado en este dispositivo.')try{localStorage.setItem('betterware_control_pedidos_setup_done','1')}catch(e){};if(window.ogNeedsSetup){window.ogNeedsSetup=false;showView('pedido')}});
 function getWeekOrders(){const week=$('closeWeek').value.trim();if(!week){alert('Escribe o selecciona la semana que deseas finalizar.');return []}return db.orders.filter(o=>String(o.week)===week).sort((a,b)=>(a.clientName||'').localeCompare(b.clientName||'','es'))}
 function weeklyMessage(orders,mode){const total=orders.reduce((n,o)=>n+(Number(o.total)||0),0);const lines=['BETTERWARE · PEDIDO SEMANAL COMPLETO','Semana: '+$('closeWeek').value.trim(),userProfile==='asociado'?'Asociado: '+associateName:'Distribuidor: '+(distributorName||'—'),userProfile==='asociado'?'Distribuidor: '+distributorName:'','Acción: '+mode,''];orders.forEach((o,i)=>{lines.push((i+1)+'. '+o.clientName+' ('+(o.clientType||'Cliente final')+(o.associate?' · Asociado #'+o.associate:'')+')');(o.products||[]).forEach(p=>lines.push('   - '+(p.code?p.code+' · ':'')+p.name+' | '+p.qty+' x '+money(p.price)+' = '+money(p.total)));lines.push('   SUBTOTAL: '+money(o.total),'')});lines.push('TOTAL GENERAL: '+money(total),'','Enviado desde Betterware Control de Pedidos.');return lines.join('\n')}
 function openWeeklyWhatsApp(mode){const orders=getWeekOrders();if(!orders.length){alert('No hay pedidos registrados para esa semana.');return}const phone=(uplinePhone||'').replace(/[^0-9]/g,'');if(!phone){alert('Primero registra el WhatsApp de tu distribuidor en Perfiles y configuración.');showView('perfil');return}const url='https://wa.me/'+phone+'?text='+encodeURIComponent(weeklyMessage(orders,mode));window.open(url,'_blank','noopener');return orders}
@@ -351,12 +359,14 @@ document.querySelectorAll('.drawer-nav button').forEach(b=>b.addEventListener('c
 
 const ogIntro=document.getElementById('ogIntro');
 const ogIntroVideo=document.getElementById('ogIntroVideo');
+window.ogNeedsSetup=false;
+try{window.ogNeedsSetup=!localStorage.getItem('betterware_control_pedidos_setup_done')&&!localStorage.getItem(PROFILE_KEY)}catch(e){}
 if(ogIntro&&ogIntroVideo){
  let ogIntroClosed=false;
- const closeOgIntro=()=>{if(ogIntroClosed)return;ogIntroClosed=true;ogIntro.classList.add('is-leaving');window.setTimeout(()=>ogIntro.remove(),650)};
+ const closeOgIntro=()=>{if(ogIntroClosed)return;ogIntroClosed=true;ogIntro.classList.add('is-leaving');window.setTimeout(()=>{ogIntro.remove();if(window.ogNeedsSetup)showView('perfil')},650)};
+ ogIntroVideo.addEventListener('playing',()=>ogIntro.classList.add('video-ready'),{once:true});
  ogIntroVideo.addEventListener('ended',closeOgIntro,{once:true});
  ogIntroVideo.addEventListener('error',closeOgIntro,{once:true});
- // Reproducir video con sonido. En APK WebView, autoplay puede estar permitido.
  ogIntroVideo.muted=false;ogIntroVideo.volume=1;
  const playAttempt=ogIntroVideo.play();
  if(playAttempt&&typeof playAttempt.catch==='function')playAttempt.catch(()=>closeOgIntro());
